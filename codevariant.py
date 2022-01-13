@@ -2,7 +2,6 @@ from art import *
 from termcolor import *
 import os
 
-
 def display_bar():
     cprint("*" * 100, "yellow")
     print()
@@ -51,7 +50,8 @@ def queryfile(source,sink):
     template2[12] = f'source.asExpr().(FunctionCall).getTarget().hasGlobalName("{source}")'
     if sink == "memcpy":
         template2[16] = f'exists(FunctionCall fc | fc.getTarget().hasName("memcpy") and sink.asExpr() = fc.getArgument(2))'
-    filename = "C:\\Users\\chloe\\Documents\\ACC_GovTech\\BlackHat_Arsenal\\CodeVariant\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery.ql"
+    filepath = os.path.dirname(__file__)
+    filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery.ql"
     with open (filename,'w') as file:
         file.writelines(template2)
     os.system("codeql query run --database=xebd_accel-ppp_cpp\\xebd_accel-ppp_1b8711c vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery.ql")
