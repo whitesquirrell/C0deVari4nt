@@ -1,0 +1,11 @@
+[2022-01-13 15:25:14] This is codeql database run-queries xebd_accel-ppp_cpp\\xebd_accel-ppp_1b8711c vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery.ql
+[2022-01-13 15:25:14] Log file was started late.
+[2022-01-13 15:25:14] Calling plumbing command: codeql resolve ram --format=json
+[2022-01-13 15:25:14] Plumbing command codeql resolve ram completed:
+                      [
+                        "-J-Xmx4090M",
+                        "--off-heap-ram=4090"
+                      ]
+[2022-01-13 15:25:14] Spawning plumbing command: execute queries -J-Xmx4090M --off-heap-ram=4090 --verbosity=progress --logdir=H:\Projects\C0deVari4nt\xebd_accel-ppp_cpp\xebd_accel-ppp_1b8711c\log --evaluator-log-level=1 --insecurely-execute-ml-model-checksums= --warnings=show --qlconfig-file=H:\Projects\C0deVari4nt\qlconfig.yml --output=H:\Projects\C0deVari4nt\xebd_accel-ppp_cpp\xebd_accel-ppp_1b8711c\results -- H:\Projects\C0deVari4nt\xebd_accel-ppp_cpp\xebd_accel-ppp_1b8711c\db-cpp vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery.ql
+[2022-01-13 15:25:22] Plumbing command codeql execute queries terminated with status 0.
+[2022-01-13 15:25:22] Exiting with code 0

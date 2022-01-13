@@ -1,0 +1,46 @@
+[2022-01-13 21:59:36] This is codeql database analyze --format=sarif-latest --output=out.json xebd_accel-ppp_cpp\xebd_accel-ppp_1b8711c vscode-codeql-starter\codeql-custom-queries-cpp\userQuery.ql
+[2022-01-13 21:59:36] Log file was started late.
+[2022-01-13 21:59:36] [PROGRESS] database analyze> Running queries.
+[2022-01-13 21:59:36] Running plumbing command: codeql database run-queries --evaluator-log-level=1 --insecurely-execute-ml-model-checksums= --warnings=show --qlconfig-file=H:\Projects\C0deVari4nt\qlconfig.yml --no-rerun -- H:\Projects\C0deVari4nt\xebd_accel-ppp_cpp\xebd_accel-ppp_1b8711c vscode-codeql-starter\codeql-custom-queries-cpp\userQuery.ql
+[2022-01-13 21:59:36] Calling plumbing command: codeql resolve ram --format=json
+[2022-01-13 21:59:36] Plumbing command codeql resolve ram completed:
+                      [
+                        "-J-Xmx4090M",
+                        "--off-heap-ram=4090"
+                      ]
+[2022-01-13 21:59:36] Spawning plumbing command: execute queries -J-Xmx4090M --off-heap-ram=4090 --verbosity=progress --logdir=H:\Projects\C0deVari4nt\xebd_accel-ppp_cpp\xebd_accel-ppp_1b8711c\log --evaluator-log-level=1 --insecurely-execute-ml-model-checksums= --warnings=show --qlconfig-file=H:\Projects\C0deVari4nt\qlconfig.yml --no-rerun --output=H:\Projects\C0deVari4nt\xebd_accel-ppp_cpp\xebd_accel-ppp_1b8711c\results -- H:\Projects\C0deVari4nt\xebd_accel-ppp_cpp\xebd_accel-ppp_1b8711c\db-cpp vscode-codeql-starter\codeql-custom-queries-cpp\userQuery.ql
+[2022-01-13 21:59:37] Plumbing command codeql execute queries terminated with status 0.
+[2022-01-13 21:59:37] Plumbing command codeql database run-queries completed with status 0.
+[2022-01-13 21:59:37] [PROGRESS] database analyze> Interpreting results.
+[2022-01-13 21:59:37] Running plumbing command: codeql database interpret-results --format=sarif-latest -o=H:\Projects\C0deVari4nt\out.json --max-paths=4 --csv-location-format=line-column --print-diagnostics-summary --print-metrics-summary -- H:\Projects\C0deVari4nt\xebd_accel-ppp_cpp\xebd_accel-ppp_1b8711c vscode-codeql-starter\codeql-custom-queries-cpp\userQuery.ql
+[2022-01-13 21:59:37] Calling plumbing command: codeql resolve queries --qlconfig-file=H:\Projects\C0deVari4nt\qlconfig.yml --format=json -- vscode-codeql-starter\codeql-custom-queries-cpp\userQuery.ql
+[2022-01-13 21:59:37] Plumbing command codeql resolve queries completed:
+                      [
+                        "H:\\Projects\\C0deVari4nt\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery.ql"
+                      ]
+[2022-01-13 21:59:37] [DETAILS] database interpret-results> Scanning for [codeql-pack.yml, qlpack.yml] from C:\External Programs\codeql\.codeqlmanifest.json
+[2022-01-13 21:59:37] [DETAILS] database interpret-results> Scanning for [codeql-pack.yml, qlpack.yml] from C:\External Programs\
+[2022-01-13 21:59:37] [DETAILS] database interpret-results> Not scanning from C:\External Programs\codeql which is already done.
+[2022-01-13 21:59:37] [PROGRESS] database interpret-results> Interpreting H:\Projects\C0deVari4nt\vscode-codeql-starter\codeql-custom-queries-cpp\userQuery.ql...
+[2022-01-13 21:59:38] Calling plumbing command: codeql resolve library-path --query=H:\Projects\C0deVari4nt\vscode-codeql-starter\codeql-custom-queries-cpp\userQuery.ql --full-library-path=none --dbscheme=none --format=json
+[2022-01-13 21:59:38] [DETAILS] resolve library-path> Resolving query at normalized path H:\Projects\C0deVari4nt\vscode-codeql-starter\codeql-custom-queries-cpp\userQuery.ql.
+[2022-01-13 21:59:38] [DETAILS] resolve library-path> Found enclosing pack 'getting-started/codeql-extra-queries-cpp' at H:\Projects\C0deVari4nt\vscode-codeql-starter\codeql-custom-queries-cpp.
+[2022-01-13 21:59:38] [DETAILS] resolve library-path> Adding compilation cache at H:\Projects\C0deVari4nt\vscode-codeql-starter\codeql-custom-queries-cpp\.cache.
+[2022-01-13 21:59:38] [DETAILS] resolve library-path> Dbscheme was explicitly overridden as H:\Projects\C0deVari4nt\none
+[2022-01-13 21:59:38] [DETAILS] resolve library-path> Library path was overridden on command line.
+[2022-01-13 21:59:38] Plumbing command codeql resolve library-path completed:
+                      {
+                        "libraryPath" : [
+                          "H:\\Projects\\C0deVari4nt\\none"
+                        ],
+                        "dbscheme" : "H:\\Projects\\C0deVari4nt\\none",
+                        "compilationCache" : [
+                          "H:\\Projects\\C0deVari4nt\\vscode-codeql-starter\\codeql-custom-queries-cpp\\.cache"
+                        ],
+                        "relativeName" : "getting-started\\codeql-extra-queries-cpp\\userQuery.ql",
+                        "qlPackName" : "getting-started/codeql-extra-queries-cpp"
+                      }
+[2022-01-13 21:59:38] [DETAILS] database interpret-results>  ... found results file at H:\Projects\C0deVari4nt\xebd_accel-ppp_cpp\xebd_accel-ppp_1b8711c\results\getting-started\codeql-extra-queries-cpp\userQuery.bqrs.
+[2022-01-13 21:59:38] [DETAILS] database interpret-results> Intepreted pathproblem query without a name (codevariant) at path H:\Projects\C0deVari4nt\vscode-codeql-starter\codeql-custom-queries-cpp\userQuery.ql.
+[2022-01-13 21:59:38] Plumbing command codeql database interpret-results completed.
+[2022-01-13 21:59:38] Terminating normally.

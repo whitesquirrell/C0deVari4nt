@@ -1,5 +1,6 @@
 /**
  * @kind path-problem
+ * @id codevariant
  */
 
 import cpp
@@ -9,11 +10,11 @@ import DataFlow::PathGraph
 class Config extends TaintTracking::Configuration {
     Config() { this = "RecvUserInputToSink" }
 
-    override predicate isSource(DataFlow::Node source) {
-source.asExpr().(FunctionCall).getTarget().hasGlobalName("read")    }
+source.asExpr().(FunctionCall).getTarget().hasGlobalName("memcpy")        source.asExpr().(FunctionCall).getTarget().hasGlobalName("read")
+    }
 
-    override predicate isSink(DataFlow::Node sink) {
-exists(FunctionCall fc | fc.getTarget().hasName("memcpy") and sink.asExpr() = fc.getArgument(2))    }
+exists(FunctionCall fc | fc.getTarget().hasName("memcpy") and sink.asExpr() = fc.getArgument(2))      exists(FunctionCall fc | fc.getTarget().hasName("memcpy") and sink.asExpr() = fc.getArgument(2))
+    }
 }
 
 from Config cfg, DataFlow::PathNode source, DataFlow::PathNode sink //PathNode shows path of sources and sinks
