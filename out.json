@@ -40,7 +40,7 @@
         } ]
       }, {
         "name" : "getting-started/codeql-extra-queries-cpp",
-        "semanticVersion" : "0.0.0+ebac40400ca00c0c606ac64a6048412b9d10fe76",
+        "semanticVersion" : "0.0.0+f7f52c1be07137e8ca2b75d2186322c32dba00b0",
         "locations" : [ {
           "uri" : "file:///H:/Projects/C0deVari4nt/vscode-codeql-starter/codeql-custom-queries-cpp/",
           "description" : {

@@ -5,7 +5,9 @@ from py2neo import Graph, Node, Relationship
 dirname = os.path.dirname(__file__)
 
 class Parse2Neo():
-    def __init__(self) -> None:
+    def __init__(self, db_filepath: str) -> None:
+        self.db_filepath = db_filepath
+
         self.read_sarif()
 
         self.graph = Graph("bolt://localhost:7687", auth = ("neo4j", "codevariant"))
@@ -83,8 +85,8 @@ class Parse2Neo():
 
 
     def del_database_cache(self):
-        db_folder = "xebd_accel-ppp_cpp\\xebd_accel-ppp_1b8711c"
-        os.remove(os.path.join(dirname, db_folder + "\\results\\getting-started\\codeql-extra-queries-cpp\\userQuery.bqrs"))
+        db_folder = self.db_filepath
+        os.remove(os.path.join(dirname, db_folder + "/results/getting-started/codeql-extra-queries-cpp/userQuery.bqrs"))
 
 
 

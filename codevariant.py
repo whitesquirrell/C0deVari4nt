@@ -1,8 +1,14 @@
 from re import template
+from shelve import DbfilenameShelf
 from art import *
 from termcolor import *
 import os
 from parse2neo import Parse2Neo
+from misc import Misc
+import sys
+
+DB_FILE_PATH = ""
+
 
 def display_bar():
     cprint("*" * 100)
@@ -92,11 +98,22 @@ def querySecondTem(source,sink,arg):
     filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery.ql"
     with open (filename,'w') as file:
         file.writelines(template2)
-    os.system("codeql database analyze --format=sarif-latest --output=out.json xebd_accel-ppp_cpp\\xebd_accel-ppp_1b8711c vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery.ql")
-    obj = Parse2Neo()
+    os.system(f"codeql database analyze --format=sarif-latest --output=out.json {DB_FILE_PATH} vscode-codeql-starter/codeql-custom-queries-cpp/userQuery.ql")
 
 if __name__ == "__main__":
     cprint("=====================================\n Hello Welcome! Presenting you...\n=====================================\n", "blue")
     tprint("C0deVari4nt")
+
+    # extract file from first arg of code (must be zip file)
+    file = sys.argv[-1]
+
+    cprint("Unpacking your database zip archive into databases/. Please wait for a few minutes", "yellow")
+    misc = Misc()
+    DB_FILE_PATH = misc.unzip_database_file(file)
+
     display_bar()
     inputValue = userInput()
+    
+    cprint("Parsing CodeQL data to neo4j...ensure your server is running", "red")
+    Parse2Neo(DB_FILE_PATH)
+    cprint("Head to http://localhost:7474/browser/ to view your updated graph", "yellow")
