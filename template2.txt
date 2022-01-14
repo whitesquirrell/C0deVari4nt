@@ -1,6 +1,7 @@
 /**
  * @name User-controlled source to dangerous sink
  * @kind path-problem
+ * @id template-2
  */
 
 import cpp
