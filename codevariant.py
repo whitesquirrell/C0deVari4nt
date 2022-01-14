@@ -1,5 +1,4 @@
 from re import template
-from shelve import DbfilenameShelf
 from art import *
 from termcolor import *
 import os
@@ -8,7 +7,6 @@ from misc import Misc
 import sys
 
 DB_FILE_PATH = ""
-
 
 def display_bar():
     cprint("*" * 100)
@@ -82,6 +80,7 @@ def queryThirdTem(sink,arg):
         file.writelines(template3)
     os.system(f"codeql query run --database={DB_FILE_PATH} vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery3.ql")
 
+
 def customSourceSink():
     print("\nPlease fill up the the source and sink function of your bug: ")
     description = input("Description (Vuln Type): ")
@@ -111,6 +110,7 @@ if __name__ == "__main__":
     cprint("If it takes too long, delete your databases folder and try again.", "red")
     misc = Misc()
     DB_FILE_PATH = misc.unzip_database_file(file)
+
 
     display_bar()
     inputValue = userInput()
