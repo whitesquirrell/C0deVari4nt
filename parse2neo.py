@@ -10,13 +10,14 @@ class Parse2Neo():
 
         self.graph = Graph("bolt://localhost:7687", auth = ("neo4j", "codevariant"))
         self.reset_graph()
-        
+
 
         for flow in self.code_flows:
             node_list = self.parse_code_flow(flow)
             self.create_nodes(node_list)
 
-        # os.remove(os.path.join(dirname, 'out.json'))
+        # note that cache deleted it's gonna take a lot longer
+        self.del_database_cache()
 
 
     def read_sarif(self):
@@ -79,6 +80,11 @@ class Parse2Neo():
                 ))
 
             prev_node = current_node
+
+
+    def del_database_cache(self):
+        db_folder = "xebd_accel-ppp_cpp\\xebd_accel-ppp_1b8711c"
+        os.remove(os.path.join(dirname, db_folder + "\\results\\getting-started\\codeql-extra-queries-cpp\\userQuery.bqrs"))
 
 
 

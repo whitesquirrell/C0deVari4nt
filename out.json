@@ -8,15 +8,19 @@
         "organization" : "GitHub",
         "semanticVersion" : "2.7.3",
         "rules" : [ {
-          "id" : "codevariant",
-          "name" : "codevariant",
+          "id" : "template-2",
+          "name" : "template-2",
+          "shortDescription" : {
+            "text" : "User-controlled source to dangerous sink"
+          },
           "defaultConfiguration" : {
             "enabled" : true,
             "level" : "warning"
           },
           "properties" : {
-            "id" : "codevariant",
-            "kind" : "path-problem"
+            "id" : "template-2",
+            "kind" : "path-problem",
+            "name" : "User-controlled source to dangerous sink"
           }
         } ]
       },
@@ -36,7 +40,7 @@
         } ]
       }, {
         "name" : "getting-started/codeql-extra-queries-cpp",
-        "semanticVersion" : "0.0.0+50b8373b7b40a8dcd95dfe33567ce9550a81d0a3",
+        "semanticVersion" : "0.0.0+ebac40400ca00c0c606ac64a6048412b9d10fe76",
         "locations" : [ {
           "uri" : "file:///H:/Projects/C0deVari4nt/vscode-codeql-starter/codeql-custom-queries-cpp/",
           "description" : {
@@ -75,10 +79,10 @@
       }
     } ],
     "results" : [ {
-      "ruleId" : "codevariant",
+      "ruleId" : "template-2",
       "ruleIndex" : 0,
       "rule" : {
-        "id" : "codevariant",
+        "id" : "template-2",
         "index" : 0
       },
       "message" : {
@@ -720,10 +724,10 @@
         } ]
       } ]
     }, {
-      "ruleId" : "codevariant",
+      "ruleId" : "template-2",
       "ruleIndex" : 0,
       "rule" : {
-        "id" : "codevariant",
+        "id" : "template-2",
         "index" : 0
       },
       "message" : {
