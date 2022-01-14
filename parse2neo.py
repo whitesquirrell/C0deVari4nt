@@ -86,7 +86,10 @@ class Parse2Neo():
 
     def del_database_cache(self):
         db_folder = self.db_filepath
-        os.remove(os.path.join(dirname, db_folder + "/results/getting-started/codeql-extra-queries-cpp/userQuery.bqrs"))
+        try:
+            os.remove(os.path.join(dirname, db_folder + "/results/getting-started/codeql-extra-queries-cpp/userQuery.bqrs"))
+        except:
+            pass
 
 
 

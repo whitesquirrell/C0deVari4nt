@@ -12,7 +12,7 @@ class Config extends TaintTracking::Configuration {
     Config() { this = "RecvUserInputToSink" }
 
     override predicate isSource(DataFlow::Node source) {
-        source.asExpr().(FunctionCall).getTarget().hasGlobalName("read")
+        source.asExpr().(FunctionCall).getTarget().hasGlobalName("mempool_alloc")
     }
 
     override predicate isSink(DataFlow::Node sink) {

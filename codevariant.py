@@ -80,7 +80,7 @@ def queryThirdTem(sink,arg):
     filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery3.ql"
     with open (filename,'w') as file:
         file.writelines(template3)
-    os.system("codeql query run --database=xebd_accel-ppp_cpp\\xebd_accel-ppp_1b8711c vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery3.ql")
+    os.system(f"codeql query run --database={DB_FILE_PATH} vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery3.ql")
 
 def customSourceSink():
     print("\nPlease fill up the the source and sink function of your bug: ")
@@ -107,13 +107,14 @@ if __name__ == "__main__":
     # extract file from first arg of code (must be zip file)
     file = sys.argv[-1]
 
-    cprint("Unpacking your database zip archive into databases/. Please wait for a few minutes", "yellow")
+    cprint("Unpacking your database zip archive into databases/. Please wait for a few minutes.", "yellow")
+    cprint("If it takes too long, delete your databases folder and try again.", "red")
     misc = Misc()
     DB_FILE_PATH = misc.unzip_database_file(file)
 
     display_bar()
     inputValue = userInput()
     
-    cprint("Parsing CodeQL data to neo4j...ensure your server is running", "red")
+    cprint("Parsing CodeQL data to neo4j...ensure your server is running.", "red")
     Parse2Neo(DB_FILE_PATH)
-    cprint("Head to http://localhost:7474/browser/ to view your updated graph", "yellow")
+    cprint("Head to http://localhost:7474/browser/ to view your updated graph.", "yellow")

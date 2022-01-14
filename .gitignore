@@ -1,5 +1,6 @@
 # own ignored folders
-databases/*
+databases/
+out.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
