@@ -1,5 +1,5 @@
 /**
- * @name User-controlled source to dangerous sink
+ * @name User-controlled source to dangerous sink with isAdditionalTaintStep
  * @kind path-problem
  * @id taint-to-memcpy
  */

@@ -1,4 +1,5 @@
 /**
+ * @name User-controlled source to dangerous sink
  * @kind path-problem
  */
 
