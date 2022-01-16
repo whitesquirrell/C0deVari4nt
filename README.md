@@ -9,7 +9,7 @@ There will be a few predefined CodeQL query templates that we will be leveraging
 ## Neo4j
 - Install neo4j locally on computer and create database `CodeVariant` with password `codevariant`
 - Start the CodeVariant instance
-- Run the C0deVariant tool and input your options
+- Run the C0deVari4nt tool and input your options
 - Once the tool has finished analysing your input, run `MATCH (n) RETURN n` in neo4j at http://localhost:7474/browser/ to get all nodes
 
 ## Run C0deVari4nt
