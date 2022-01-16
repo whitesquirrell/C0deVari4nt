@@ -62,27 +62,6 @@ def chooseOptions():
             print("Invalid input, please enter a number")
         except:
             break
-    
-def customSink():
-    print("\nPlease fill up the dangerous sink function: ")
-    description = input("Description (Vuln Type): ")
-    sink = input ("Sink Function(eg memcpy): ")
-    arg = input("Vuln sink argument(starts from 0): ")
-    print("query third template")
-    queryThirdTem(sink,arg)
-
-def queryThirdTem(sink,arg):
-    with open ("template3.txt","r") as file:
-        template3 = file.read()
-    template3 = template3.replace("memcpy", sink).replace("2", arg)
-    filepath = os.path.dirname(os.path.abspath(__file__))
-    filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery3.ql"
-    with open (filename,'w') as file:
-        file.writelines(template3)
-    cprint("Starting CodeQL...","yellow")
-    os.system(f"codeql query run --database={DB_FILE_PATH} vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery3.ql")
-    cprint("CodeQL has successfully analysed your codebase.", "yellow")
-
 
 def customSourceSink():
     print("\nPlease fill up the the source and sink function of your bug: ")
@@ -90,19 +69,39 @@ def customSourceSink():
     source = input ("Source Function(eg recv): ")
     sink = input ("Sink Function(eg memcpy): ")
     arg = input("Vuln sink argument(starts from 0): ")
-    querySecondTem(source,sink,arg)    
+    queryFirstTem(source,sink,arg)    
 
-def querySecondTem(source,sink,arg):
-    with open ("template2.txt","r") as file:
-        template2 = file.read()
-    template2 = template2.replace("read", source).replace("memcpy", sink).replace("2", arg)
+def queryFirstTem(source,sink,arg):
+    with open ("template1.txt","r") as file:
+        template1 = file.read()
+    template1 = template1.replace("read", source).replace("memcpy", sink).replace("2", arg)
     filepath = os.path.dirname(os.path.abspath(__file__))
     filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery.ql"
     with open (filename,'w') as file:
-        file.writelines(template2)
+        file.writelines(template1)
     cprint("Starting CodeQL...","yellow")
     os.system(f"codeql database analyze --format=sarif-latest --output=out.json {DB_FILE_PATH} vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery.ql")
     cprint("CodeQL has successfully analysed your codebase", "yellow")
+
+def customSink():
+    print("\nPlease fill up the dangerous sink function: ")
+    description = input("Description (Vuln Type): ")
+    sink = input ("Sink Function(eg memcpy): ")
+    arg = input("Vuln sink argument(starts from 0): ")
+    querySecondTem(sink,arg)
+
+def querySecondTem(sink,arg):
+    with open ("template2.txt","r") as file:
+        template2 = file.read()
+    template2 = template2.replace("memcpy", sink).replace("2", arg)
+    filepath = os.path.dirname(os.path.abspath(__file__))
+    filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery3.ql"
+    with open (filename,'w') as file:
+        file.writelines(template2)
+    cprint("Starting CodeQL...","yellow")
+    os.system(f"codeql query run --database={DB_FILE_PATH} vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery3.ql")
+    cprint("CodeQL has successfully analysed your codebase.\n", "yellow")
+
 
 if __name__ == "__main__":
     cprint("=====================================\n Hello Welcome! Presenting you...\n=====================================\n", "blue")
