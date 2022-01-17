@@ -42,21 +42,25 @@ def predefinedDS():
 def chooseOptions():
     print("Please choose one of the following options")
     print("1. Query all sources to a dangerous sink")
-    print("2. Query a specific source to a dangerous sink\n")
+    print("2. Query a specific source to a dangerous sink")
+    print("3. Query a specific source to a dangerous sink (Tainted source)\n")
     while True:
         try:
             category = input("Please input your choice of action (ENTER TO EXIT):")
             if category == "" :
                 raise Exception("END PROGRAM") 
             else:
-                if (int(category) <1 or int(category)>2):
+                if (int(category) <1 or int(category)>3):
                     print("Invalid input, please enter a 1 or 2")
                 else:
                     if (category == "1"):
                         customSink()
                         break
-                    else:
+                    elif (category == "2"):
                         customSourceSink()
+                        break
+                    else:
+                        taintSource()
                         break
         except ValueError:
             print("Invalid input, please enter a number")
@@ -65,7 +69,7 @@ def chooseOptions():
 
 def customSourceSink():
     print("\nPlease fill up the the source and sink function of your bug: ")
-    description = input("Description (Vuln Type): ")
+    # description = input("Description (Vuln Type): ")
     source = input ("Source Function(eg recv): ")
     sink = input ("Sink Function(eg memcpy): ")
     arg = input("Vuln sink argument(starts from 0): ")
@@ -85,7 +89,7 @@ def queryFirstTem(source,sink,arg):
 
 def customSink():
     print("\nPlease fill up the dangerous sink function: ")
-    description = input("Description (Vuln Type): ")
+    # description = input("Description (Vuln Type): ")
     sink = input ("Sink Function(eg memcpy): ")
     arg = input("Vuln sink argument(starts from 0): ")
     querySecondTem(sink,arg)
@@ -96,11 +100,36 @@ def querySecondTem(sink,arg):
     template2 = template2.replace("memcpy", sink).replace("2", arg)
     filepath = os.path.dirname(os.path.abspath(__file__))
     filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery2.ql"
+    print(template2)
     with open (filename,'w') as file:
         file.writelines(template2)
     cprint("Starting CodeQL...","yellow")
     os.system(f"codeql database analyze --format=sarif-latest --output=out.json {DB_FILE_PATH} vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery2.ql")
     # os.system(f"codeql query run --database={DB_FILE_PATH} vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery2.ql") # this works
+    cprint("CodeQL has successfully analysed your codebase.\n", "yellow")
+
+def taintSource():
+    print("\nPlease fill up the the source and sink function of your bug: ")
+    source = input ("Source Function(eg recvfrom): ")
+    sourceArg = input ("Source Function Argument (starts from 0): ")
+    taintSource = input("Tainted function(eg source -> tainted function -> sink): ")
+    sink = input ("Sink Function(eg memcpy): ")
+    sinkArg = input("Vuln sink argument(starts from 0): ")
+    queryThirdTem(source,sourceArg,taintSource,sink,sinkArg)    
+
+def queryThirdTem(source,sourceArg,taintSource,sink,sinkArg):
+    with open ("template3.txt","r") as file:
+        template3 = file.read()
+    template3 = template3.replace("recvfrom", source).replace("1", sourceArg)
+    template3 = template3.replace("mempool_alloc", taintSource)
+    template3 = template3.replace("memcpy", sink).replace("2", sinkArg)
+    filepath = os.path.dirname(os.path.abspath(__file__))
+    filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery3.ql"
+    print(template3)
+    with open (filename,'w') as file:
+        file.writelines(template3)
+    cprint("Starting CodeQL...","yellow")
+    os.system(f"codeql database analyze --format=sarif-latest --output=out.json {DB_FILE_PATH} vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery3.ql")
     cprint("CodeQL has successfully analysed your codebase.\n", "yellow")
 
 
