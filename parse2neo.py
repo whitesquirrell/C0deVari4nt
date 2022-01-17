@@ -1,7 +1,7 @@
 from inspect import currentframe
 import json
 import os
-from py2neo import Graph, Node, Relationship
+from py2neo import Graph, Node, Relationship, NodeMatcher
 import glob
 
 dirname = os.path.dirname(__file__)
@@ -25,7 +25,13 @@ class Parse2Neo():
 
         # note that cache deleted it's gonna take a lot longer
         self.del_database_cache()
- 
+
+    
+    def get_node(self, label: str, location: str):
+        matcher = NodeMatcher(self.graph)
+
+        return matcher.match(label, location=location).first()
+
 
 
     def read_sarif(self):
@@ -92,13 +98,37 @@ class Parse2Neo():
             if i == 0: label = "Source"
             elif i == len(node_list) - 1: label = "Sink"
 
-            current_node = Node(
-                label,
-                name = node["code_line"],
-                location = f"{node['file_path']}:{node['file_line']}",
-                target = node["message"],
-                context = node["code_context"]
-            )
+            location = f"{node['file_path']}:{node['file_line']}"
+
+            # check if same node exists yet
+            existing_node = self.get_node("Step", location)
+            if existing_node:
+                current_node = existing_node
+            else:
+                current_node = Node(
+                    "Step",
+                    name = node["code_line"],
+                    location = location,
+                    target = node["message"],
+                    context = node["code_context"]
+                )
+
+            # current_node = Node(
+            #     "Step",
+            #     name = node["code_line"],
+            #     location = location,
+            #     target = node["message"]
+            #     # context = node["code_context"]
+            # )
+
+            if i == 0: current_node.update_labels(["Step", "Source"])
+            elif i == len(node_list) - 1: current_node.update_labels(["Step", "Sink"])
+            
+
+
+            # print(prev_node)
+            # print(current_node)
+            # print("=======================================")
 
             if prev_node:
                 # print(prev_node["location"])
@@ -130,3 +160,5 @@ class Parse2Neo():
 
 if __name__ == "__main__":
     obj = Parse2Neo("databases\\xebd_accel-ppp_1b8711c")
+    # node = obj.get_node("Step", "accel-pppd/radius/packet.c:142")
+    # print(node)
