@@ -1,6 +1,7 @@
 import json
 import os
 from py2neo import Graph, Node, Relationship
+import glob
 
 dirname = os.path.dirname(__file__)
 
@@ -32,21 +33,13 @@ class Parse2Neo():
         self.code_flows = []
         for result in json_file["runs"][0]["results"]:
             # for flow in result["codeFlows"]:
-            try:
-                self.code_flows += [result["codeFlows"][0]]
-            except:
-                # pass if the result dont have a codeflow (means is just header)
-                pass
 
-    # alternative to read_sarif one
-    # def read_sarif2(self):
-    #     with open(os.path.join(dirname, 'out.json')) as f:
-    #         json_file = json.load(f)
-
-    #     self.code_flows = []
-    #     for result in json_file["runs"][0]["results"]:
-    #         # for flow in result["codeFlows"]:
-    #         self.code_flows += [result["codeFlows"][0]]
+            for i in result["codeFlows"]:
+                try:
+                    self.code_flows += [i]
+                except:
+                    # pass if the result dont have a codeflow (means is just header)
+                    pass
 
 
     def reset_graph(self):
@@ -102,7 +95,10 @@ class Parse2Neo():
     def del_database_cache(self):
         db_folder = self.db_filepath
         try:
-            os.remove(os.path.join(dirname, db_folder + "/results/getting-started/codeql-extra-queries-cpp/userQuery.bqrs"))
+            files = glob.glob(os.path.join(dirname, db_folder + "/results/getting-started/codeql-extra-queries-cpp/*"))
+            # os.remove(os.path.join(dirname, db_folder + "/results/getting-started/codeql-extra-queries-cpp/"))
+            for f in files:
+                os.remove(f)
         except:
             pass
 
