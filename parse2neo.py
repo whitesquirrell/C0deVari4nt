@@ -1,3 +1,4 @@
+from inspect import currentframe
 import json
 import os
 from py2neo import Graph, Node, Relationship
@@ -65,7 +66,6 @@ class Parse2Neo():
             file_path = i["location"]["physicalLocation"]["artifactLocation"]["uri"]
             file_line = i["location"]["physicalLocation"]["region"]["startLine"]
 
-            # print(src_root + file_path)
             with open(src_root + file_path) as f:
                 data = f.readlines()
                 code_line = data[file_line - 1]
@@ -99,16 +99,21 @@ class Parse2Neo():
                 target = node["message"],
                 context = node["code_context"]
             )
-            self.graph.create(current_node)
 
             if prev_node:
-                self.graph.create(Relationship(
-                    prev_node,
-                    "Flows into",
-                    current_node
-                ))
+                # print(prev_node["location"])
+                if prev_node["location"] != current_node["location"]:
+                    self.graph.create(current_node)
 
-            prev_node = current_node
+                    self.graph.create(Relationship(
+                        prev_node,
+                        "Flows into",
+                        current_node
+                    ))
+                    prev_node = current_node
+            else:
+                prev_node = current_node
+
 
 
     def del_database_cache(self):
