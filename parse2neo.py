@@ -1,11 +1,15 @@
+from inspect import currentframe
 import json
 import os
-from py2neo import Graph, Node, Relationship
+from py2neo import Graph, Node, Relationship, NodeMatcher
 import glob
 
 dirname = os.path.dirname(__file__)
 
+
 class Parse2Neo():
+    context_width = 20
+
     def __init__(self, db_filepath: str) -> None:
         self.db_filepath = db_filepath
 
@@ -21,7 +25,13 @@ class Parse2Neo():
 
         # note that cache deleted it's gonna take a lot longer
         self.del_database_cache()
- 
+
+    
+    def get_node(self, label: str, location: str):
+        matcher = NodeMatcher(self.graph)
+
+        return matcher.match(label, location=location).first()
+
 
 
     def read_sarif(self):
@@ -55,13 +65,34 @@ class Parse2Neo():
     def parse_code_flow(self, code_flow):
         locations = code_flow["threadFlows"][0]["locations"]
 
+        
+
         final = []
         for i in locations:
+            
+            file_path = i["location"]["physicalLocation"]["artifactLocation"]["uri"]
+            file_line = i["location"]["physicalLocation"]["region"]["startLine"]
+
+            # file_path = file_path.replace("file:/", "")
+
+            if "file:/" in file_path:
+                src_root = self.db_filepath
+                file_path = file_path.replace("file:/", "")
+            else: src_root = self.db_filepath + "opt/src/"
+
+            with open(src_root + file_path) as f:
+                data = f.readlines()
+                code_line = data[file_line - 1]
+
+                code_context = data[file_line - self.context_width:file_line + self.context_width]
+
 
             node = {
-                "file_path": i["location"]["physicalLocation"]["artifactLocation"]["uri"],
-                "file_line": i["location"]["physicalLocation"]["region"]["startLine"],
-                "message": i["location"]["message"]["text"]
+                "file_path": file_path,
+                "file_line": file_line,
+                "message": i["location"]["message"]["text"],
+                "code_line": code_line.strip(),
+                "code_context": code_context
             }
 
             final += [node]
@@ -75,21 +106,52 @@ class Parse2Neo():
             if i == 0: label = "Source"
             elif i == len(node_list) - 1: label = "Sink"
 
-            current_node = Node(
-                label,
-                name = node["message"],
-                location = f"{node['file_path']}:{node['file_line']}"
-            )
-            self.graph.create(current_node)
+            location = f"{node['file_path']}:{node['file_line']}"
+
+            # check if same node exists yet
+            existing_node = self.get_node("Step", location)
+            if existing_node:
+                current_node = existing_node
+            else:
+                current_node = Node(
+                    "Step",
+                    name = node["code_line"],
+                    location = location,
+                    target = node["message"],
+                    context = node["code_context"]
+                )
+
+            # current_node = Node(
+            #     "Step",
+            #     name = node["code_line"],
+            #     location = location,
+            #     target = node["message"]
+            #     # context = node["code_context"]
+            # )
+
+            if i == 0: current_node.update_labels(["Step", "Source"])
+            elif i == len(node_list) - 1: current_node.update_labels(["Step", "Sink"])
+            
+
+
+            # print(prev_node)
+            # print(current_node)
+            # print("=======================================")
 
             if prev_node:
-                self.graph.create(Relationship(
-                    prev_node,
-                    "Flows into",
-                    current_node
-                ))
+                # print(prev_node["location"])
+                if prev_node["location"] != current_node["location"]:
+                    self.graph.create(current_node)
 
-            prev_node = current_node
+                    self.graph.create(Relationship(
+                        prev_node,
+                        "Flows into",
+                        current_node
+                    ))
+                    prev_node = current_node
+            else:
+                prev_node = current_node
+
 
 
     def del_database_cache(self):
@@ -106,3 +168,5 @@ class Parse2Neo():
 
 if __name__ == "__main__":
     obj = Parse2Neo("databases\\xebd_accel-ppp_1b8711c")
+    # node = obj.get_node("Step", "accel-pppd/radius/packet.c:142")
+    # print(node)
