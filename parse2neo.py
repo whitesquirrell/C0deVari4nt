@@ -65,12 +65,20 @@ class Parse2Neo():
     def parse_code_flow(self, code_flow):
         locations = code_flow["threadFlows"][0]["locations"]
 
-        src_root = self.db_filepath + "/opt/src/"
+        
 
         final = []
         for i in locations:
+            
             file_path = i["location"]["physicalLocation"]["artifactLocation"]["uri"]
             file_line = i["location"]["physicalLocation"]["region"]["startLine"]
+
+            # file_path = file_path.replace("file:/", "")
+
+            if "file:/" in file_path:
+                src_root = self.db_filepath
+                file_path = file_path.replace("file:/", "")
+            else: src_root = self.db_filepath + "opt/src/"
 
             with open(src_root + file_path) as f:
                 data = f.readlines()
