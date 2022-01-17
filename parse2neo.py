@@ -5,7 +5,10 @@ import glob
 
 dirname = os.path.dirname(__file__)
 
+
 class Parse2Neo():
+    context_width = 20
+
     def __init__(self, db_filepath: str) -> None:
         self.db_filepath = db_filepath
 
@@ -55,13 +58,27 @@ class Parse2Neo():
     def parse_code_flow(self, code_flow):
         locations = code_flow["threadFlows"][0]["locations"]
 
+        src_root = self.db_filepath + "/opt/src/"
+
         final = []
         for i in locations:
+            file_path = i["location"]["physicalLocation"]["artifactLocation"]["uri"]
+            file_line = i["location"]["physicalLocation"]["region"]["startLine"]
+
+            # print(src_root + file_path)
+            with open(src_root + file_path) as f:
+                data = f.readlines()
+                code_line = data[file_line - 1]
+
+                code_context = data[file_line - self.context_width:file_line + self.context_width]
+
 
             node = {
-                "file_path": i["location"]["physicalLocation"]["artifactLocation"]["uri"],
-                "file_line": i["location"]["physicalLocation"]["region"]["startLine"],
-                "message": i["location"]["message"]["text"]
+                "file_path": file_path,
+                "file_line": file_line,
+                "message": i["location"]["message"]["text"],
+                "code_line": code_line.strip(),
+                "code_context": code_context
             }
 
             final += [node]
@@ -77,8 +94,10 @@ class Parse2Neo():
 
             current_node = Node(
                 label,
-                name = node["message"],
-                location = f"{node['file_path']}:{node['file_line']}"
+                name = node["code_line"],
+                location = f"{node['file_path']}:{node['file_line']}",
+                target = node["message"],
+                context = node["code_context"]
             )
             self.graph.create(current_node)
 

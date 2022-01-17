@@ -100,7 +100,7 @@ def querySecondTem(sink,arg):
     template2 = template2.replace("memcpy", sink).replace("2", arg)
     filepath = os.path.dirname(os.path.abspath(__file__))
     filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery2.ql"
-    print(template2)
+    # print(template2)
     with open (filename,'w') as file:
         file.writelines(template2)
     cprint("Starting CodeQL...","yellow")
@@ -125,7 +125,7 @@ def queryThirdTem(source,sourceArg,taintSource,sink,sinkArg):
     template3 = template3.replace("memcpy", sink).replace("2", sinkArg)
     filepath = os.path.dirname(os.path.abspath(__file__))
     filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery3.ql"
-    print(template3)
+    # print(template3)
     with open (filename,'w') as file:
         file.writelines(template3)
     cprint("Starting CodeQL...","yellow")
