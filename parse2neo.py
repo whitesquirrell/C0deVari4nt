@@ -8,11 +8,11 @@ class Parse2Neo():
     def __init__(self, db_filepath: str) -> None:
         self.db_filepath = db_filepath
 
-        self.read_sarif()
-
+        
         self.graph = Graph("bolt://localhost:7687", auth = ("neo4j", "codevariant"))
         self.reset_graph()
 
+        self.read_sarif()
 
         for flow in self.code_flows:
             node_list = self.parse_code_flow(flow)
@@ -20,6 +20,7 @@ class Parse2Neo():
 
         # note that cache deleted it's gonna take a lot longer
         self.del_database_cache()
+ 
 
 
     def read_sarif(self):
@@ -31,7 +32,21 @@ class Parse2Neo():
         self.code_flows = []
         for result in json_file["runs"][0]["results"]:
             # for flow in result["codeFlows"]:
-            self.code_flows += [result["codeFlows"][0]]
+            try:
+                self.code_flows += [result["codeFlows"][0]]
+            except:
+                # pass if the result dont have a codeflow (means is just header)
+                pass
+
+    # alternative to read_sarif one
+    # def read_sarif2(self):
+    #     with open(os.path.join(dirname, 'out.json')) as f:
+    #         json_file = json.load(f)
+
+    #     self.code_flows = []
+    #     for result in json_file["runs"][0]["results"]:
+    #         # for flow in result["codeFlows"]:
+    #         self.code_flows += [result["codeFlows"][0]]
 
 
     def reset_graph(self):
@@ -94,4 +109,4 @@ class Parse2Neo():
 
 
 if __name__ == "__main__":
-    obj = Parse2Neo()
+    obj = Parse2Neo("databases\\xebd_accel-ppp_1b8711c")

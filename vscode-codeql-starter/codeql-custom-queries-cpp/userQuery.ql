@@ -1,7 +1,7 @@
 /**
  * @name User-controlled source to dangerous sink
  * @kind path-problem
- * @id template-2
+ * @id template-1
  */
 
 import cpp
@@ -12,7 +12,7 @@ class Config extends TaintTracking::Configuration {
     Config() { this = "RecvUserInputToSink" }
 
     override predicate isSource(DataFlow::Node source) {
-        source.asExpr().(FunctionCall).getTarget().hasGlobalName("mempool_alloc")
+        source.asExpr().(FunctionCall).getTarget().hasGlobalName("read")
     }
 
     override predicate isSink(DataFlow::Node sink) {
