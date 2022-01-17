@@ -1,6 +1,7 @@
 import json
 import os
 from py2neo import Graph, Node, Relationship
+import glob
 
 dirname = os.path.dirname(__file__)
 
@@ -94,7 +95,10 @@ class Parse2Neo():
     def del_database_cache(self):
         db_folder = self.db_filepath
         try:
-            os.remove(os.path.join(dirname, db_folder + "/results/getting-started/codeql-extra-queries-cpp/"))
+            files = glob.glob(os.path.join(dirname, db_folder + "/results/getting-started/codeql-extra-queries-cpp/*"))
+            # os.remove(os.path.join(dirname, db_folder + "/results/getting-started/codeql-extra-queries-cpp/"))
+            for f in files:
+                os.remove(f)
         except:
             pass
 
