@@ -8,6 +8,7 @@ import semmle.code.cpp.dataflow.TaintTracking
 import DataFlow::PathGraph
   
 
+
 class Config extends TaintTracking::Configuration {
   Config() { this = "ReadFileBufferToMemFuncLength" }
 
