@@ -1,12 +1,28 @@
 /**
  * @name Any source to dangerous sink
  * @kind path-problem
- * @id template-1
+ * @id template-2
  */
 
 import cpp
 import semmle.code.cpp.dataflow.TaintTracking
 import DataFlow::PathGraph
+
+
+class MallocSize extends AddExpr {
+    MallocSize () {
+        exists(
+            FunctionCall fc | 
+            fc.getTarget().hasName("malloc") and 
+            fc.getArgument(0) instanceof AddExpr and
+            this = fc.getArgument(0)
+          )
+    }
+
+    predicate isVariableWithin(Operation var){
+        this.getAnOperand() = var
+    }
+}
 
 class Config extends TaintTracking::Configuration {
     Config() { this = "RecvUserInputToSink" }
@@ -18,15 +34,13 @@ class Config extends TaintTracking::Configuration {
     }
 
     override predicate isSink(DataFlow::Node sink) {
-<<<<<<< HEAD
-      exists(FunctionCall fc | fc.getTarget().hasName("strcpy") and sink.asExpr() = fc.getArgument(1))
-=======
       exists(FunctionCall fc | fc.getTarget().hasName("memcpy") and sink.asExpr() = fc.getArgument(2))
       and not sink.asExpr().isConstant()
->>>>>>> a8786e0c2ea5da0a04877ef8076ffecf974e236d
+    //   and sink.asExpr() instanceof Operation
+    //   and exists(MallocSize ms | ms.isVariableWithin(sink.asExpr()))
     }
 }
 
 from Config cfg, DataFlow::PathNode source, DataFlow::PathNode sink //PathNode shows path of sources and sinks
 where cfg.hasFlowPath(source, sink)
-select sink, source, sink, "Taint from UDF to strcpy " + source
+select sink, source, sink, "Taint from UDF to memcpy " + source
