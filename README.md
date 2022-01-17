@@ -2,9 +2,13 @@
 A tool that automates the process of variant analysis through CodeQL queries and Neo4j visualisation
 
 ## CodeQL
-There will be a few predefined CodeQL query templates that we will be leveraging on
+Run Code base against predefined vulnerable sources and sinks:
+1. CodeQL will query all source functions to banned string functions based on Microsoft's Security Development Lifecycle (SDL) Banned Function Calls
+
+Run Code base against sources and sinks of your choice
 1. User inputs vulnerable source, sink and sink argument. C0deVari4nt will use this information to query the CodeQL template and pass the results to Neo4j.
 2. User inputs vulnerable sink and argument. C0deVarin4t will use this information to search for all source expressions to the vulnerable sink and pass the results to Neo4j.
+3. User inputs a vulnerable source to dangerous sink whereby the source is tainted 
 
 ## Neo4j
 - Install neo4j locally on computer and create database `CodeVariant` with password `codevariant`
