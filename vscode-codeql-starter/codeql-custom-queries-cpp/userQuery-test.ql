@@ -8,6 +8,22 @@ import cpp
 import semmle.code.cpp.dataflow.TaintTracking
 import DataFlow::PathGraph
 
+
+class MallocSize extends AddExpr {
+    MallocSize () {
+        exists(
+            FunctionCall fc | 
+            fc.getTarget().hasName("malloc") and 
+            fc.getArgument(0) instanceof AddExpr and
+            this = fc.getArgument(0)
+          )
+    }
+
+    predicate isVariableWithin(Operation var){
+        this.getAnOperand() = var
+    }
+}
+
 class Config extends TaintTracking::Configuration {
     Config() { this = "RecvUserInputToSink" }
 
@@ -20,6 +36,8 @@ class Config extends TaintTracking::Configuration {
     override predicate isSink(DataFlow::Node sink) {
       exists(FunctionCall fc | fc.getTarget().hasName("memcpy") and sink.asExpr() = fc.getArgument(2))
       and not sink.asExpr().isConstant()
+    //   and sink.asExpr() instanceof Operation
+    //   and exists(MallocSize ms | ms.isVariableWithin(sink.asExpr()))
     }
 }
 
