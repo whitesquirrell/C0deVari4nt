@@ -95,11 +95,12 @@ def querySecondTem(sink,arg):
         template2 = file.read()
     template2 = template2.replace("memcpy", sink).replace("2", arg)
     filepath = os.path.dirname(os.path.abspath(__file__))
-    filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery3.ql"
+    filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery2.ql"
     with open (filename,'w') as file:
         file.writelines(template2)
     cprint("Starting CodeQL...","yellow")
-    os.system(f"codeql query run --database={DB_FILE_PATH} vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery3.ql")
+    os.system(f"codeql database analyze --format=sarif-latest --output=out.json {DB_FILE_PATH} vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery2.ql")
+    # os.system(f"codeql query run --database={DB_FILE_PATH} vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery2.ql") # this works
     cprint("CodeQL has successfully analysed your codebase.\n", "yellow")
 
 
