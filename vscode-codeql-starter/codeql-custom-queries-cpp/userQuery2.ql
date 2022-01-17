@@ -1,7 +1,7 @@
 /**
  * @name Any source to dangerous sink
  * @kind path-problem
- * @id template-2
+ * @id template-1
  */
 
 import cpp
@@ -18,10 +18,10 @@ class Config extends TaintTracking::Configuration {
     }
 
     override predicate isSink(DataFlow::Node sink) {
-      exists(FunctionCall fc | fc.getTarget().hasName("memcpy") and sink.asExpr() = fc.getArgument(2))
+      exists(FunctionCall fc | fc.getTarget().hasName("strcpy") and sink.asExpr() = fc.getArgument(1))
     }
 }
 
 from Config cfg, DataFlow::PathNode source, DataFlow::PathNode sink //PathNode shows path of sources and sinks
 where cfg.hasFlowPath(source, sink)
-select sink, source, sink, "Taint from UDF to memcpy " + source
+select sink, source, sink, "Taint from UDF to strcpy " + source
