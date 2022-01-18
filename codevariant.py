@@ -7,7 +7,7 @@ from misc import Misc
 import sys
 
 DB_FILE_PATH = ""
-
+filepath = ""
 def display_bar():
     cprint("*" * 100)
     print()
@@ -37,13 +37,27 @@ def userInput():
             break
 
 def predefinedDS():
-    print("Run the code base against our vuln sources and sinks")
+    print("Running codebase against all source functions to banned string copy functions")
+    bannedStringCopy()
+
+def bannedStringCopy():
+    with open (filepath + "\\templates\\template4.txt","r") as file:
+        template4 = file.read()
+    print(template4)
+    filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery4.ql"
+    with open (filename,'w') as file:
+        file.writelines(template4)
+    cprint("Starting CodeQL...","yellow")
+    os.system(f"codeql database analyze --format=sarif-latest --output=out.json {DB_FILE_PATH} vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery4.ql")
+    cprint("CodeQL has successfully analysed your codebase", "yellow")
+
+
 
 def chooseOptions():
     print("Please choose one of the following options")
     print("1. Query all sources to a dangerous sink")
     print("2. Query a specific source to a dangerous sink")
-    print("3. Query a specific source to a dangerous sink (Tainted source)\n")
+    print("3. Query a specific source to a dangerous sink (Tainted source)")
     while True:
         try:
             category = input("Please input your choice of action (ENTER TO EXIT):")
@@ -76,10 +90,10 @@ def customSourceSink():
     queryFirstTem(source,sink,arg)    
 
 def queryFirstTem(source,sink,arg):
-    with open ("template1.txt","r") as file:
+    with open (filepath + "\\templates\\template1.txt","r") as file:
         template1 = file.read()
     template1 = template1.replace("read", source).replace("memcpy", sink).replace("2", arg)
-    filepath = os.path.dirname(os.path.abspath(__file__))
+    print(template1)
     filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery.ql"
     with open (filename,'w') as file:
         file.writelines(template1)
@@ -95,17 +109,15 @@ def customSink():
     querySecondTem(sink,arg)
 
 def querySecondTem(sink,arg):
-    with open ("template2.txt","r") as file:
+    with open (filepath + "\\templates\\template2.txt","r") as file:
         template2 = file.read()
     template2 = template2.replace("memcpy", sink).replace("2", arg)
-    filepath = os.path.dirname(os.path.abspath(__file__))
     filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery2.ql"
     # print(template2)
     with open (filename,'w') as file:
         file.writelines(template2)
     cprint("Starting CodeQL...","yellow")
     os.system(f"codeql database analyze --format=sarif-latest --output=out.json {DB_FILE_PATH} vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery2.ql")
-    # os.system(f"codeql query run --database={DB_FILE_PATH} vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery2.ql") # this works
     cprint("CodeQL has successfully analysed your codebase.\n", "yellow")
 
 def taintSource():
@@ -118,14 +130,13 @@ def taintSource():
     queryThirdTem(source,sourceArg,taintSource,sink,sinkArg)    
 
 def queryThirdTem(source,sourceArg,taintSource,sink,sinkArg):
-    with open ("template3.txt","r") as file:
+    with open (filepath + "\\templates\\template3.txt","r") as file:
         template3 = file.read()
     template3 = template3.replace("recvfrom", source).replace("1", sourceArg)
     template3 = template3.replace("mempool_alloc", taintSource)
     template3 = template3.replace("memcpy", sink).replace("2", sinkArg)
-    filepath = os.path.dirname(os.path.abspath(__file__))
     filename = filepath + "\\vscode-codeql-starter\\codeql-custom-queries-cpp\\userQuery3.ql"
-    # print(template3)
+
     with open (filename,'w') as file:
         file.writelines(template3)
     cprint("Starting CodeQL...","yellow")
@@ -139,7 +150,7 @@ if __name__ == "__main__":
 
     # extract file from first arg of code (must be zip file)
     file = sys.argv[-1]
-
+    filepath = os.path.dirname(os.path.abspath(__file__))
     cprint("Unpacking your database zip archive into databases/. Please wait for a few minutes.", "yellow")
     cprint("If it takes too long, delete your databases folder and try again.", "red")
     misc = Misc()

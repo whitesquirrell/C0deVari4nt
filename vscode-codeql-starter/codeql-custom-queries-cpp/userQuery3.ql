@@ -12,13 +12,13 @@ class Config extends TaintTracking::Configuration {
   Config() { this = "ReadFileBufferToMemFuncLength" }
 
   override predicate isSource(DataFlow::Node source) {
-    exists(FunctionCall fc | source.asExpr() = fc.getArgument(1) and fc.getTarget().hasName("recvfrom"))
+    exists(FunctionCall fc | source.asExpr() = fc.getArgument(1) and fc.getTarget().hasName("read"))
   }
 
   
   override predicate isAdditionalTaintStep(DataFlow::Node pred, DataFlow::Node succ) {
       exists(FunctionCall fc |
-        fc.getTarget().hasName("recvfrom") and
+        fc.getTarget().hasName("read") and
         pred.asExpr() = fc.getArgument(1) and
         succ.asExpr().(FunctionCall).getTarget().hasGlobalName("mempool_alloc")
       )
