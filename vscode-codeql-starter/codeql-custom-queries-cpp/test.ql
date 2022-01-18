@@ -68,8 +68,8 @@ class Config extends TaintTracking::Configuration {
 from Config cfg, DataFlow::PathNode source, DataFlow::PathNode sink, MallocSize ms
 where cfg.hasFlowPath(source, sink)
 // select sink, source, sink, "Taint from UDF to memcpy " + source
-and source.getNode().asExpr() = ms.getAnOperand()
-select source.getNode().asExpr(), ms.getAnOperand(), sink, "bruh"
+// and source.getNode().asExpr().getValue() = ms.getAnOperand().getValue()
+select source.getNode().asExpr(), ms.getAnOperand(), source, "bruh"
 
 // from MallocSize ms
 // select ms, ms.getAnOperand()
