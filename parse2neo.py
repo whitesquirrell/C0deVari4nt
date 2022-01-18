@@ -1,4 +1,4 @@
-from inspect import currentframe
+
 import json
 import os
 from py2neo import Graph, Node, Relationship, NodeMatcher, GraphService
@@ -19,20 +19,36 @@ class Parse2Neo():
 
         self.read_sarif()
 
-        for i, flow in enumerate(self.code_flows):
-            node_list = self.parse_code_flow(flow)
-            self.create_nodes(node_list, i + 1)
+        # for i, flow in enumerate(self.code_flows):
+        #     node_list = self.parse_code_flow(flow)
+        #     self.create_nodes(node_list, i + 1)
+        self.show_all_paths()
 
-        # self.init_node_colours()
+        # self.show_one_path(19)
+
 
         # note that cache deleted it's gonna take a lot longer
         self.del_database_cache()
 
-    
-    def get_node(self, label: str, location: str):
-        # matcher = NodeMatcher(self.graph)
 
-        # return matcher.match(label, location=location).first()
+    def show_all_paths(self):
+        for i, flow in enumerate(self.code_flows):
+            node_list = self.parse_code_flow(flow)
+            self.create_nodes(node_list, i + 1)
+    
+    def show_one_path(self, path_num: int):
+        matcher = NodeMatcher(self.graph)
+        nodes = matcher.match(f"Path-{path_num}").all()
+
+        self.reset_graph()
+        
+        for node in nodes:
+            print(node)
+            self.graph.create(node)
+
+        # print(nodes)
+
+    def get_node(self, label: str, location: str):
         return self.graph.nodes.match(label, location=location).first()
 
 
@@ -41,7 +57,6 @@ class Parse2Neo():
         with open(os.path.join(dirname, 'out.json')) as f:
             json_file = json.load(f)
 
-        # self.code_flows = json_file["runs"][0]["results"][0]["codeFlows"]
 
         self.code_flows = []
         for result in json_file["runs"][0]["results"]:
@@ -56,13 +71,14 @@ class Parse2Neo():
 
 
     def reset_graph(self):
-        self.graph.run('''
-            MATCH (n)
-            OPTIONAL MATCH (n)-[r]-()
-            WITH n,r LIMIT 50000
-            DELETE n,r
-            RETURN count(n) as deletedNodesCount
-            ''')
+        # self.graph.run('''
+        #     MATCH (n)
+        #     OPTIONAL MATCH (n)-[r]-()
+        #     WITH n,r LIMIT 50000
+        #     DELETE n,r
+        #     RETURN count(n) as deletedNodesCount
+        #     ''')
+        self.graph.delete_all()
         
 
     def run_command_native(self, command):
@@ -70,12 +86,6 @@ class Parse2Neo():
 
         with driver.session() as session:
             session.run(command)
-
-    # def init_node_colours(self):
-    #     # tx = self.graph.begin()
-    #     # tx.run(":style")
-    #     gs = GraphService("bolt://localhost:7687")
-    #     print(gs.config)
 
 
     def parse_code_flow(self, code_flow):
@@ -148,35 +158,14 @@ class Parse2Neo():
             if i == 0:
                 
                 node_labels += ["Source", f"Path-{path_count} Source"]
-                # print(current_node["location"])
-                # current_node.update_labels(["Step", "Source"])
-                # current_node.update_labels(node_labels)
 
-                # print(path_count)
-                # path_count += 1
             elif i == len(node_list) - 1:
                 # current_node.update_labels(["Step", "Sink"])
                 node_labels += ["Sink", f"Path-{path_count} Sink"]
             
-            # print(current_node['location'])
-            # print(current_node['name'])
-            
-            # print(path_count)
-            # print(node_labels)
-            # print(i)
-
-            # print()
 
             current_node.update_labels(node_labels)
 
-            # print(current_node.labels)
-            # print(prev_node)
-            # print(current_node)
-            # print()
-
-            # print(prev_node)
-            # print(current_node)
-            # print("=======================================")
 
             self.graph.push(current_node)
 
@@ -199,7 +188,6 @@ class Parse2Neo():
         db_folder = self.db_filepath
         try:
             files = glob.glob(os.path.join(dirname, db_folder + "/results/getting-started/codeql-extra-queries-cpp/*"))
-            # os.remove(os.path.join(dirname, db_folder + "/results/getting-started/codeql-extra-queries-cpp/"))
             for f in files:
                 os.remove(f)
         except:
@@ -211,3 +199,4 @@ if __name__ == "__main__":
     obj = Parse2Neo("databases\\xebd_accel-ppp_1b8711c")
     # node = obj.get_node("Step", "accel-pppd/radius/packet.c:142")
     # print(node)
+    # obj.show_one_path(19)
