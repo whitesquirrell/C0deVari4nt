@@ -80,7 +80,7 @@ class Parse2Neo():
                 file_path = file_path.replace("file:/", "")
             else: src_root = self.db_filepath + "opt/src/"
 
-            with open(src_root + file_path) as f:
+            with open(src_root + file_path, encoding="UTF8") as f:
                 data = f.readlines()
                 code_line = data[file_line - 1]
 
