@@ -26,7 +26,6 @@ class Parse2Neo():
 
         # self.show_one_path(19)
 
-
         # note that cache deleted it's gonna take a lot longer
         self.del_database_cache()
 
@@ -35,7 +34,8 @@ class Parse2Neo():
         for i, flow in enumerate(self.code_flows):
             node_list = self.parse_code_flow(flow)
             self.create_nodes(node_list, i + 1)
-    
+
+
     def show_one_path(self, path_num: int):
         matcher = NodeMatcher(self.graph)
         nodes = matcher.match(f"Path-{path_num}").all()
@@ -62,22 +62,15 @@ class Parse2Neo():
         for result in json_file["runs"][0]["results"]:
             # for flow in result["codeFlows"]:
 
-            for i in result["codeFlows"]:
-                try:
+            try:
+                for i in result["codeFlows"]:
                     self.code_flows += [i]
-                except:
-                    # pass if the result dont have a codeflow (means is just header)
-                    pass
+            except:
+                # pass if the result dont have a codeflow (means is just header)
+                pass
 
 
     def reset_graph(self):
-        # self.graph.run('''
-        #     MATCH (n)
-        #     OPTIONAL MATCH (n)-[r]-()
-        #     WITH n,r LIMIT 50000
-        #     DELETE n,r
-        #     RETURN count(n) as deletedNodesCount
-        #     ''')
         self.graph.delete_all()
         
 

@@ -8,12 +8,12 @@ import cpp
 import semmle.code.cpp.dataflow.TaintTracking
 import DataFlow::PathGraph
 
-class MallocSize extends AddExpr {
+class MallocSize extends Operation {
     MallocSize () {
         exists(
             FunctionCall fc | 
             fc.getTarget().hasName("malloc") and 
-            fc.getArgument(0) instanceof AddExpr and
+            fc.getArgument(0) instanceof Operation and
             this = fc.getArgument(0)
           )
     }
@@ -69,7 +69,7 @@ from Config cfg, DataFlow::PathNode source, DataFlow::PathNode sink, MallocSize 
 where cfg.hasFlowPath(source, sink)
 // select sink, source, sink, "Taint from UDF to memcpy " + source
 // and source.getNode().asExpr().getValue() = ms.getAnOperand().getValue()
-select source.getNode().asExpr(), ms.getAnOperand(), source, "bruh"
+select sink.getNode().asExpr(), ms.getAnOperand()
 
 // from MallocSize ms
 // select ms, ms.getAnOperand()
