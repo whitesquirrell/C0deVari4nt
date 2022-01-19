@@ -43,24 +43,24 @@
   }
 
 
-  node.Step {
-    color: #F16667;
-    border-color: #eb2728;
-    text-color-internal: #FFFFFF;
-    caption: "{name}";
-  }
-  node.Source {
-    color: #F79767;
-    border-color: #f36924;
-    text-color-internal: #FFFFFF;
-    defaultCaption: "<id>";
-    caption: "{name}";
-  }
-  node.Sink {
-    color: #57C7E3;
-    border-color: #23b3d7;
-    text-color-internal: #2A2C34;
-    defaultCaption: "<id>";
-    caption: "{name}";
-  }
+node.Step {
+  color: #F16667;
+  border-color: #eb2728;
+  text-color-internal: #FFFFFF;
+  caption: "{name}";
+}
+node.Source {
+  color: #F79767;
+  border-color: #f36924;
+  text-color-internal: #FFFFFF;
+  defaultCaption: "<id>";
+  caption: "{name}";
+}
+node.Sink {
+  color: #57C7E3;
+  border-color: #23b3d7;
+  text-color-internal: #2A2C34;
+  defaultCaption: "<id>";
+  caption: "{name}";
+}
   

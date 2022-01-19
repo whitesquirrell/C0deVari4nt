@@ -133,8 +133,9 @@ class Parse2Neo():
                     "Step",
                     name = node["code_line"],
                     location = location,
-                    target = node["message"]
-                    # context = node["code_context"]
+                    target = node["message"],
+                    path = path_count,
+                    context = node["code_context"]
                 )
 
             # current_node = Node(
@@ -146,6 +147,7 @@ class Parse2Neo():
             # )
             
             node_labels = [f"Path-{path_count}"]
+            # node_labels = []
             
 
             if i == 0:

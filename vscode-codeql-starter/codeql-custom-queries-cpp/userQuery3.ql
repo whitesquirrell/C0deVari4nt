@@ -1,7 +1,7 @@
 /**
  * @name User-controlled source to dangerous sink
  * @kind path-problem
- * @id taint-to-memcpy
+ * @id template-3
  */
 import cpp
 import semmle.code.cpp.dataflow.TaintTracking
@@ -12,13 +12,13 @@ class Config extends TaintTracking::Configuration {
   Config() { this = "ReadFileBufferToMemFuncLength" }
 
   override predicate isSource(DataFlow::Node source) {
-    exists(FunctionCall fc | source.asExpr() = fc.getArgument(1) and fc.getTarget().hasName("read"))
+    exists(FunctionCall fc | source.asExpr() = fc.getArgument(1) and fc.getTarget().hasName("recvfrom"))
   }
 
   
   override predicate isAdditionalTaintStep(DataFlow::Node pred, DataFlow::Node succ) {
       exists(FunctionCall fc |
-        fc.getTarget().hasName("read") and
+        fc.getTarget().hasName("recvfrom") and
         pred.asExpr() = fc.getArgument(1) and
         succ.asExpr().(FunctionCall).getTarget().hasGlobalName("mempool_alloc")
       )
