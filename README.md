@@ -40,10 +40,10 @@ CodeVariant will be available as an open-source project to facilitate additional
 1. Query all source functions to banned string functions based on Microsoft's Security Development Lifecycle (SDL) Banned Function Calls
     1. Developer wants to check codebase against Microsoft's Security Development Lifecycle (SDL) Banned Function Calls
 
-### Run Codebase against sources and sinks of your choice
+### Run Codebase against sources and sinks of your choice (based on the bug you want to find)
 1. Query user input source, sink and sink argument. 
     1. Developer knows the source and sink information
 2. Query all source expressions to user input sink and argument.
-    1. Developer does not know what the source expression/function is but knows the sink function and argument. 
+    1. Developer only knows the sink function and argument.
 3. Query user input vulnerable source and sink information whereby the source is tainted.
-    1. Developer is trying to find a bug whereby the user input variable is tainted. For instance, developer is trying to paths whereby the `recvfrom` function value is used in `memcpy` sizeof Argument. However, these 2 nodes are not connected as the variable holding the `recvfrom` value is dereferenced into another variable before the memcpy function. If we were to use the first query, no results will be returned. Instead, we can force the 2 nodes to connect by using `isAdditionalTaintStep` in this query template to catch the tainted function.
+    1. Developer is trying to find a bug whereby the user input variable is tainted. For instance, developer is trying to find paths whereby the `recvfrom` function value is used in `memcpy` sizeof Argument. However, these 2 nodes are not connected as the variable holding the `recvfrom` value is dereferenced and stored in another variable before the memcpy function. If we were to use the first query, no results will be returned. Instead, we can force the 2 nodes to connect by using `isAdditionalTaintStep` in this query template to catch the tainted source.
