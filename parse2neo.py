@@ -1,8 +1,9 @@
-from inspect import currentframe
+
 import json
 import os
-from py2neo import Graph, Node, Relationship, NodeMatcher
+from py2neo import Graph, Node, Relationship, NodeMatcher, GraphService
 import glob
+from neo4j import GraphDatabase
 
 dirname = os.path.dirname(__file__)
 
@@ -13,24 +14,42 @@ class Parse2Neo():
     def __init__(self, db_filepath: str) -> None:
         self.db_filepath = db_filepath
 
-        
         self.graph = Graph("bolt://localhost:7687", auth = ("neo4j", "codevariant"))
         self.reset_graph()
 
         self.read_sarif()
 
-        for flow in self.code_flows:
-            node_list = self.parse_code_flow(flow)
-            self.create_nodes(node_list)
+        # for i, flow in enumerate(self.code_flows):
+        #     node_list = self.parse_code_flow(flow)
+        #     self.create_nodes(node_list, i + 1)
+        self.show_all_paths()
+
+        # self.show_one_path(19)
 
         # note that cache deleted it's gonna take a lot longer
         self.del_database_cache()
 
-    
-    def get_node(self, label: str, location: str):
-        matcher = NodeMatcher(self.graph)
 
-        return matcher.match(label, location=location).first()
+    def show_all_paths(self):
+        for i, flow in enumerate(self.code_flows):
+            node_list = self.parse_code_flow(flow)
+            self.create_nodes(node_list, i + 1)
+
+
+    def show_one_path(self, path_num: int):
+        matcher = NodeMatcher(self.graph)
+        nodes = matcher.match(f"Path-{path_num}").all()
+
+        self.reset_graph()
+        
+        for node in nodes:
+            print(node)
+            self.graph.create(node)
+
+        # print(nodes)
+
+    def get_node(self, label: str, location: str):
+        return self.graph.nodes.match(label, location=location).first()
 
 
 
@@ -38,34 +57,32 @@ class Parse2Neo():
         with open(os.path.join(dirname, 'out.json')) as f:
             json_file = json.load(f)
 
-        # self.code_flows = json_file["runs"][0]["results"][0]["codeFlows"]
 
         self.code_flows = []
         for result in json_file["runs"][0]["results"]:
             # for flow in result["codeFlows"]:
 
-            for i in result["codeFlows"]:
-                try:
+            try:
+                for i in result["codeFlows"]:
                     self.code_flows += [i]
-                except:
-                    # pass if the result dont have a codeflow (means is just header)
-                    pass
+            except:
+                # pass if the result dont have a codeflow (means is just header)
+                pass
 
 
     def reset_graph(self):
-        self.graph.run('''
-            MATCH (n)
-            OPTIONAL MATCH (n)-[r]-()
-            WITH n,r LIMIT 50000
-            DELETE n,r
-            RETURN count(n) as deletedNodesCount
-            ''')
+        self.graph.delete_all()
+        
+
+    def run_command_native(self, command):
+        driver = GraphDatabase.driver("bolt://localhost:7687", auth = ("neo4j", "codevariant"))
+
+        with driver.session() as session:
+            session.run(command)
 
 
     def parse_code_flow(self, code_flow):
         locations = code_flow["threadFlows"][0]["locations"]
-
-        
 
         final = []
         for i in locations:
@@ -78,7 +95,7 @@ class Parse2Neo():
             if "file:/" in file_path:
                 src_root = self.db_filepath
                 file_path = file_path.replace("file:/", "")
-            else: src_root = self.db_filepath + "opt/src/"
+            else: src_root = self.db_filepath + "/opt/src/"
 
             with open(src_root + file_path, encoding="UTF8") as f:
                 data = f.readlines()
@@ -99,12 +116,11 @@ class Parse2Neo():
 
         return final
 
-    def create_nodes(self, node_list):
+    def create_nodes(self, node_list, path_count: int):
+
         prev_node = None
+        # path_count = 1
         for i, node in enumerate(node_list):
-            label = "Step"
-            if i == 0: label = "Source"
-            elif i == len(node_list) - 1: label = "Sink"
 
             location = f"{node['file_path']}:{node['file_line']}"
 
@@ -118,6 +134,7 @@ class Parse2Neo():
                     name = node["code_line"],
                     location = location,
                     target = node["message"],
+                    path = path_count,
                     context = node["code_context"]
                 )
 
@@ -128,20 +145,29 @@ class Parse2Neo():
             #     target = node["message"]
             #     # context = node["code_context"]
             # )
-
-            if i == 0: current_node.update_labels(["Step", "Source"])
-            elif i == len(node_list) - 1: current_node.update_labels(["Step", "Sink"])
+            
+            node_labels = [f"Path-{path_count}"]
+            # node_labels = []
             
 
+            if i == 0:
+                
+                node_labels += ["Source", f"Path-{path_count} Source"]
 
-            # print(prev_node)
-            # print(current_node)
-            # print("=======================================")
+            elif i == len(node_list) - 1:
+                # current_node.update_labels(["Step", "Sink"])
+                node_labels += ["Sink", f"Path-{path_count} Sink"]
+            
+
+            current_node.update_labels(node_labels)
+
+
+            self.graph.push(current_node)
 
             if prev_node:
                 # print(prev_node["location"])
                 if prev_node["location"] != current_node["location"]:
-                    self.graph.create(current_node)
+                    # self.graph.create(current_node)
 
                     self.graph.create(Relationship(
                         prev_node,
@@ -153,12 +179,10 @@ class Parse2Neo():
                 prev_node = current_node
 
 
-
     def del_database_cache(self):
         db_folder = self.db_filepath
         try:
             files = glob.glob(os.path.join(dirname, db_folder + "/results/getting-started/codeql-extra-queries-cpp/*"))
-            # os.remove(os.path.join(dirname, db_folder + "/results/getting-started/codeql-extra-queries-cpp/"))
             for f in files:
                 os.remove(f)
         except:
@@ -170,3 +194,4 @@ if __name__ == "__main__":
     obj = Parse2Neo("databases\\xebd_accel-ppp_1b8711c")
     # node = obj.get_node("Step", "accel-pppd/radius/packet.c:142")
     # print(node)
+    # obj.show_one_path(19)

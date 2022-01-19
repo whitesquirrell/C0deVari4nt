@@ -1,0 +1,188 @@
+node {
+  diameter: 50px;
+  border-width: 2px;
+  font-size: 10px;
+}
+relationship {
+  shaft-width: 1px;
+  font-size: 8px;
+  padding: 3px;
+  text-color-external: #000000;
+  caption: "<type>";
+}
+node.* {
+  defaultCaption: "<id>";
+}
+node.Step {
+  defaultCaption: "<id>";
+}
+node.Source {
+  defaultCaption: "<id>";
+}
+node.Path-1 {
+  defaultCaption: "<id>";
+  caption: "{name}";
+}
+node.Path-1 Source {
+  defaultCaption: "<id>";
+}
+node.Path-2 {
+  defaultCaption: "<id>";
+}
+node.Path-4 {
+  defaultCaption: "<id>";
+}
+node.Path-10 {
+  defaultCaption: "<id>";
+}
+node.Path-19 {
+  defaultCaption: "<id>";
+  caption: "{name}";
+}
+node.Path-2 Source {
+  defaultCaption: "<id>";
+}
+node.Path-6 {
+  defaultCaption: "<id>";
+}
+node.Path-9 {
+  defaultCaption: "<id>";
+}
+node.Path-10 Source {
+  defaultCaption: "<id>";
+}
+node.Path-11 {
+  defaultCaption: "<id>";
+  caption: "{name}";
+}
+node.Path-11 Source {
+  defaultCaption: "<id>";
+}
+node.Path-13 {
+  defaultCaption: "<id>";
+  caption: "{name}";
+}
+node.Path-15 {
+  defaultCaption: "<id>";
+}
+node.Path-18 {
+  defaultCaption: "<id>";
+}
+node.Path-19 Source {
+  defaultCaption: "<id>";
+}
+node.Path-20 {
+  defaultCaption: "<id>";
+}
+node.Path-20 Source {
+  defaultCaption: "<id>";
+}
+node.Path-22 {
+  defaultCaption: "<id>";
+}
+node.Path-24 {
+  defaultCaption: "<id>";
+}
+node.Path-27 {
+  defaultCaption: "<id>";
+}
+node.Path-5 {
+  defaultCaption: "<id>";
+}
+node.Path-3 {
+  defaultCaption: "<id>";
+}
+node.Path-7 {
+  defaultCaption: "<id>";
+}
+node.Path-12 {
+  defaultCaption: "<id>";
+}
+node.Path-14 {
+  defaultCaption: "<id>";
+  caption: "{name}";
+}
+node.Path-16 {
+  defaultCaption: "<id>";
+}
+node.Path-21 {
+  defaultCaption: "<id>";
+}
+node.Path-23 {
+  defaultCaption: "<id>";
+}
+node.Path-25 {
+  defaultCaption: "<id>";
+}
+node.Sink {
+  defaultCaption: "<id>";
+}
+node.Path-1 Sink {
+  defaultCaption: "<id>";
+}
+node.Path-2 Sink {
+  defaultCaption: "<id>";
+}
+node.Path-3 Sink {
+  defaultCaption: "<id>";
+}
+node.Path-4 Sink {
+  defaultCaption: "<id>";
+}
+node.Path-5 Sink {
+  defaultCaption: "<id>";
+}
+node.Path-6 Sink {
+  defaultCaption: "<id>";
+}
+node.Path-7 Sink {
+  defaultCaption: "<id>";
+}
+node.Path-8 {
+  defaultCaption: "<id>";
+}
+node.Path-8 Sink {
+  defaultCaption: "<id>";
+}
+node.Path-9 Sink {
+  defaultCaption: "<id>";
+}
+node.Path-3 Source {
+  defaultCaption: "<id>";
+}
+node.Path-4 Source {
+  defaultCaption: "<id>";
+}
+node.Path-12 Source {
+  defaultCaption: "<id>";
+}
+node.Path-13 Source {
+  defaultCaption: "<id>";
+}
+node.Path-21 Source {
+  defaultCaption: "<id>";
+}
+node.Path-22 Source {
+  defaultCaption: "<id>";
+}
+
+node.Step {
+  color: #F16667;
+  border-color: #eb2728;
+  text-color-internal: #FFFFFF;
+  caption: "{name}";
+}
+node.Source {
+  color: #F79767;
+  border-color: #f36924;
+  text-color-internal: #FFFFFF;
+  defaultCaption: "<id>";
+  caption: "{name}";
+}
+node.Sink {
+  color: #57C7E3;
+  border-color: #23b3d7;
+  text-color-internal: #2A2C34;
+  defaultCaption: "<id>";
+  caption: "{name}";
+}
