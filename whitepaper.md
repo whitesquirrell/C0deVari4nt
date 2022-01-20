@@ -58,7 +58,7 @@ C0deVari4nt will be available as an open-source project to facilitate additional
 
 3. After the user has chosen their options, our tool will edit the CodeQL predefined templates accordingly and run them.
 
-4. Once CodeQL has successfully analysed the codebase, the data will be stored in a JSON file. Further filtering of the JSON file will be done and duplicated nodes and paths will be removed and displayed in Neo4j. 
+4. Once CodeQL has successfully analysed the codebase, the data will be stored in a JSON file in SARIF format. Further filtering of the JSON file will be done and duplicated nodes and paths will be removed and displayed in Neo4j. 
 	![](https://i.imgur.com/wtlGhWU.png)
 
 ## Command-line interface:
@@ -73,10 +73,10 @@ The following depicts the CodeQL results for a query with `recvfrom` as a source
 ![](https://i.imgur.com/MpcFuRK.png)
 
 
-This result yields a total of 180 nodes in more than 25 different paths in Neo4j. Note that Blue nodes are sources and Red nodes are sinks:
+This result yields a total of **180 nodes** in more than 25 different paths in Neo4j. Note that Blue nodes are sources and Red nodes are sinks:
 ![](https://i.imgur.com/b2RwljZ.png)
 
-However, C0deVaria4nt will be able to identify duplicate occurrences of each node, source and sink and merge the relationships of the nodes. This resulted in a significantly cleaner graph with a total of 11 unique nodes:
+By putting this query through our tool, we were able to identify duplicate occurrences of each node, source and sink and merge the relationships of the nodes. This resulted in a significantly cleaner graph with a total of **11 unique nodes**:
 ![](https://i.imgur.com/h2zpwlw.png)
 
 The tool can further categorise each node into their different paths using Neo4j's built-in node labels:
