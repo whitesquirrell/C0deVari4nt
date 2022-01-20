@@ -25,4 +25,4 @@ class Config extends TaintTracking::Configuration {
 
 from Config cfg, DataFlow::PathNode source, DataFlow::PathNode sink //PathNode shows path of sources and sinks
 where cfg.hasFlowPath(source, sink)
-select sink, source, sink, "Taint from UDF to memcpy " + source
+select sink, source, sink, "Taint from all source expressions to memcpy " + source
