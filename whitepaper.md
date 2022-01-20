@@ -89,7 +89,7 @@ The tool can further categorise each node into their different paths using Neo4j
 ### Predefined Vulnerable sources and sinks
 - We will be relying on Microsoft’s Security Development Lifecycle (SDL) Banned Function Calls for predefined vulnerable sources and sinks. In the long run, we will conduct a study of all CVEs and extract relevant sources and sinks to generate CodeQL queries via machine learning.
 ### Targeted on C codebase
-- Currently, our tool is targeted at C codebases but this will be expanded in the long run.
+- Currently, our tool is targeted at C/C++ codebases but this will be expanded in the long run.
 
 ## References
 - Berger, A., 2021. What is Log4Shell? The Log4j vulnerability explained (and what to do about it). [online] Dynatrace news. Available at: <https://www.dynatrace.com/news/blog/what-is-log4shell/> [Accessed 20 January 2022].
