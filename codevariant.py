@@ -147,7 +147,7 @@ if __name__ == "__main__":
     file = sys.argv[-1]
     filepath = os.path.dirname(os.path.abspath(__file__))
     cprint("Unpacking your database zip archive into databases/. Please wait for a few minutes.", "yellow")
-    cprint("If it takes too long, delete your databases folder and try again.", "red")
+    cprint("If it takes too long, delete your database folder and try again.", "red")
     misc = Misc()
     DB_FILE_PATH = misc.unzip_database_file(file)
     display_bar()
