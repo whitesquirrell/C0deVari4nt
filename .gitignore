@@ -1,6 +1,7 @@
 # own ignored folders
 databases/
 out.json
+node_modules
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -35,4 +35,4 @@ class Config extends TaintTracking::Configuration {
 
 from Config cfg, DataFlow::PathNode source, DataFlow::PathNode sink
 where cfg.hasFlowPath(source, sink)
-select sink, source, sink, "Taint from fmap_readn call in " + source.getNode().getFunction().getFile().getBaseName() + " to memcpy len arg in " + sink.getNode().getFunction().getName()
+select sink, source, sink, "Taint from mempool_alloc in " + source.getNode().getFunction().getFile().getBaseName() + " to memcpy len arg in " + sink.getNode().getFunction().getName()

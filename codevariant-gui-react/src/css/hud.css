@@ -1,0 +1,35 @@
+#node-props{
+    color: black;
+    background-color: white;
+    position: absolute;
+    right: 2vw;
+    top: 2vh;
+    padding: 2vh;
+    border-radius: 2vh;
+    min-width: 15vw;
+}
+
+
+
+.section-title{
+    font-size: 1vw;
+}
+
+/* table prop */
+#prop-table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td, th {
+    border: none;
+    text-align: left;
+    padding: 8px;
+}
+tr{
+    background-color: #c3c3c3;
+}
+
+tr:nth-child(even) {
+    background-color: #eeeeee;
+}

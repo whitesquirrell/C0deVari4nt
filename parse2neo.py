@@ -1,9 +1,11 @@
 
 import json
 import os
-from py2neo import Graph, Node, Relationship, NodeMatcher, GraphService
+from xml.dom.minicompat import NodeList
+from py2neo import Graph, Node, Relationship, NodeMatcher
 import glob
 from neo4j import GraphDatabase
+from flask import jsonify
 
 dirname = os.path.dirname(__file__)
 
@@ -23,17 +25,13 @@ class Parse2Neo():
         #     node_list = self.parse_code_flow(flow)
         #     self.create_nodes(node_list, i + 1)
         self.show_all_paths()
+        # self.gen_vis_data()
 
         # self.show_one_path(19)
 
         # note that cache deleted it's gonna take a lot longer
         self.del_database_cache()
 
-
-    def show_all_paths(self):
-        for i, flow in enumerate(self.code_flows):
-            node_list = self.parse_code_flow(flow)
-            self.create_nodes(node_list, i + 1)
 
 
     def show_one_path(self, path_num: int):
@@ -69,16 +67,87 @@ class Parse2Neo():
                 # pass if the result dont have a codeflow (means is just header)
                 pass
 
+        # print(self.code_flows)
 
-    def reset_graph(self):
-        self.graph.delete_all()
+
+    def show_all_paths(self):
+        for i, flow in enumerate(self.code_flows):
+            node_list = self.parse_code_flow(flow)
+            self.create_nodes(node_list, i + 1)
+            # print(node_list)
+
+
+    def gen_vis_data(self):
+        all_nodes = []
+        node_labels = []
+        all_rs = []
+
+        for i, flow in enumerate(self.code_flows):
+            node_list = self.parse_code_flow(flow)
+            # self.create_nodes(node_list, i + 1)
+            # print(i)
+            # print()
+            # print(node_list)
+            # print()
+
+            prev_node_id = None
+            for i, node in enumerate(node_list):
+                # new node doesnt exist yet
+                if not node in all_nodes:
+                    all_nodes += [node]
+                    node_labels += [{"Step"}]
+                    # node_count += 1
+                
+                # node alr exists
+
+                # get if of alr existing node
+                ids = all_nodes.index(node) + 1
+
+                # add r/s
+                if prev_node_id and prev_node_id != ids:
+                    new_rs = {"from": prev_node_id, "to": ids}
+                    if not new_rs in all_rs:
+                        all_rs += [new_rs]
+                prev_node_id = ids
+
+                # add node labels
+                index = all_nodes.index(node)
+                if i == 0:
+                    node_labels[index].add("Source")
+                elif i == len(node_list) - 1:
+                    node_labels[index].add("Sink")
+
+
+        print(len(all_nodes))
+        print(all_nodes)
+        print(all_rs)
+        print(len(all_rs))
+        print(node_labels)
+
+        for label, node in zip(node_labels, all_nodes):
+            index = all_nodes.index(node)
+            all_nodes[index]["id"] = index + 1
+
+            if "Source" in list(label):
+                all_nodes[index]["group"] = "Source"
+            elif "Sink" in list(label):
+                all_nodes[index]["group"] = "Sink"
+            else:
+                all_nodes[index]["group"] = "Step"
+           
+            all_nodes[index]["label"] = list(label)[0]
+            all_nodes[index]["all_labels"] = list(label)
         
 
-    def run_command_native(self, command):
-        driver = GraphDatabase.driver("bolt://localhost:7687", auth = ("neo4j", "codevariant"))
+        print(all_nodes)
 
-        with driver.session() as session:
-            session.run(command)
+        final = {
+            "nodes": all_nodes,
+            "edges": all_rs
+        }
+
+        with open("codevariant-gui-react/src/data/vis.json", "w") as outfile:
+            json.dump(final, outfile)
 
 
     def parse_code_flow(self, code_flow):
@@ -93,28 +162,38 @@ class Parse2Neo():
             # file_path = file_path.replace("file:/", "")
 
             if "file:/" in file_path:
-                src_root = self.db_filepath
+                src_root = self.db_filepath + "/"
                 file_path = file_path.replace("file:/", "")
             else: src_root = self.db_filepath + "/opt/src/"
 
+            # print(file_path)
             with open(src_root + file_path, encoding="UTF8") as f:
                 data = f.readlines()
                 code_line = data[file_line - 1]
 
                 code_context = data[file_line - self.context_width:file_line + self.context_width]
 
-
             node = {
                 "file_path": file_path,
                 "file_line": file_line,
-                "message": i["location"]["message"]["text"],
-                "code_line": code_line.strip(),
-                "code_context": code_context
+                # "message": i["location"]["message"]["text"],
+                "code_line": code_line.strip()
+                # "code_context": code_context
             }
-
             final += [node]
 
         return final
+
+
+    def reset_graph(self):
+        self.graph.delete_all()
+        
+
+    def run_command_native(self, command):
+        driver = GraphDatabase.driver("bolt://localhost:7687", auth = ("neo4j", "codevariant"))
+
+        with driver.session() as session:
+            session.run(command)
 
     def create_nodes(self, node_list, path_count: int):
 
@@ -133,9 +212,9 @@ class Parse2Neo():
                     "Step",
                     name = node["code_line"],
                     location = location,
-                    target = node["message"],
-                    path = path_count,
-                    context = node["code_context"]
+                    # target = node["message"],
+                    path = path_count
+                    # context = node["code_context"]
                 )
 
             # current_node = Node(
@@ -189,9 +268,39 @@ class Parse2Neo():
             pass
 
 
+    # def get_graph_json(self):
+    #     # nodes = list(map(buildNodes, self.graph.run('MATCH (n) RETURN n')))
+    #     # # a = self.graph.run('MATCH (n) RETURN n').data()
+    #     # # for i in a:
+    #     # #     print(i["n"]).identity
+    #     # edges = list(map(buildEdges, self.graph.evaluate('MATCH ()-[r]->() RETURN r')))
+
+    #     # # print(json.dumps({"nodes": nodes, "edges": edges}))
+    #     print(self.graph.nodes)
+
+
+# def buildNodes(nodeRecord):
+#     print(nodeRecord['n'].identity)
+#     data = {"id": str(nodeRecord['n'].identity), "label": next(iter(nodeRecord['n'].labels))}
+#     print(data)
+#     data.update(nodeRecord['n'].properties)
+
+#     return {"data": data}
+
+# def buildEdges(relationRecord):
+#     data = {"source": str(relationRecord.r.start_node._id), 
+#             "target": str(relationRecord.r.end_node._id),
+#             "relationship": relationRecord.r.rel.type}
+
+#     return {"data": data}
+
+
+
 
 if __name__ == "__main__":
     obj = Parse2Neo("databases\\xebd_accel-ppp_1b8711c")
     # node = obj.get_node("Step", "accel-pppd/radius/packet.c:142")
     # print(node)
     # obj.show_one_path(19)
+    # obj.get_graph_json()
+    obj.gen_vis_data()
