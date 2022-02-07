@@ -8,18 +8,14 @@ import data from "../../data/vis.json";
 function Graph () {
     const dispatch = useDispatch();
 
-    const readSarifFile = () => {
-        
-    }
-
     const spawnNodes = (data) => {   
         
         // console.log(data)
         let nodes = []
 
-        for (var i = 0; i < data["nodes"].length; i ++){
-            console.log(data["nodes"][i])
-        }
+        // for (var i = 0; i < data["nodes"].length; i ++){
+        //     console.log(data["nodes"][i])
+        // }
 
         nodes = new DataSet(data["nodes"])
 
@@ -83,8 +79,12 @@ function Graph () {
                 width: 2,
                 arrows: "to",
             },
+            physics: false,
         };
         var network = new Network(container, data, options);
+        dispatch({type: "INIT_NETWORK", payload: network})
+        dispatch({type: "NODES_DATASET", payload: nodes})
+        dispatch({type: "INIT_NODE_OPTIONS", payload: network.body.nodes})
 
         network.on("click", (prop) => {
             let ids = prop.nodes;

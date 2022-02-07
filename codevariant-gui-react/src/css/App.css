@@ -26,3 +26,15 @@ body {
 .blue {
     border: 2px solid blue ;
 }
+
+p{
+    margin: 10px 0px !important;
+}
+
+/* CSS colour vars */
+:root{
+    --path-colour: #899EEC;
+    --step-colour: #F6EDB5;
+    --source-colour: #89ECB7;
+    --sink-colour: #EC8989;
+}

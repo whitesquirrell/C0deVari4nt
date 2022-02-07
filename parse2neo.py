@@ -16,21 +16,22 @@ class Parse2Neo():
     def __init__(self, db_filepath: str) -> None:
         self.db_filepath = db_filepath
 
-        self.graph = Graph("bolt://localhost:7687", auth = ("neo4j", "codevariant"))
-        self.reset_graph()
+        # self.graph = Graph("bolt://localhost:7687", auth = ("neo4j", "codevariant"))
+        # self.reset_graph()
 
         self.read_sarif()
 
-        # for i, flow in enumerate(self.code_flows):
-        #     node_list = self.parse_code_flow(flow)
+        for i, flow in enumerate(self.code_flows):
+            node_list = self.parse_code_flow(flow)
         #     self.create_nodes(node_list, i + 1)
-        self.show_all_paths()
+        # self.show_all_paths()
         # self.gen_vis_data()
 
         # self.show_one_path(19)
 
         # note that cache deleted it's gonna take a lot longer
-        self.del_database_cache()
+        # self.del_database_cache()
+        self.gen_vis_data()
 
 
 
@@ -82,7 +83,7 @@ class Parse2Neo():
         node_labels = []
         all_rs = []
 
-        for i, flow in enumerate(self.code_flows):
+        for path_count, flow in enumerate(self.code_flows):
             node_list = self.parse_code_flow(flow)
             # self.create_nodes(node_list, i + 1)
             # print(i)
@@ -112,10 +113,15 @@ class Parse2Neo():
 
                 # add node labels
                 index = all_nodes.index(node)
+
+                node_labels[index].add(f"Path-{path_count + 1}")
+
                 if i == 0:
                     node_labels[index].add("Source")
+                    node_labels[index].add(f"Path-{path_count + 1} Source")
                 elif i == len(node_list) - 1:
                     node_labels[index].add("Sink")
+                    node_labels[index].add(f"Path-{path_count + 1} Sink")
 
 
         print(len(all_nodes))
@@ -124,26 +130,42 @@ class Parse2Neo():
         print(len(all_rs))
         print(node_labels)
 
+        max_path = len(self.code_flows)
+
         for label, node in zip(node_labels, all_nodes):
             index = all_nodes.index(node)
             all_nodes[index]["id"] = index + 1
 
+
             if "Source" in list(label):
                 all_nodes[index]["group"] = "Source"
+                all_nodes[index]["color"] = {"background": "#89ECB7", "border": "#2DC775"}
+                all_nodes[index]["label"] = "Source"
             elif "Sink" in list(label):
                 all_nodes[index]["group"] = "Sink"
+                all_nodes[index]["color"] = {"background": "#EC8989", "border": "#DF5959"}
+                all_nodes[index]["label"] = "Sink"
             else:
                 all_nodes[index]["group"] = "Step"
+                all_nodes[index]["color"] = {"background": "#F6EDB5", "border": "#E9D86F"}
+                all_nodes[index]["label"] = "Step"
            
-            all_nodes[index]["label"] = list(label)[0]
-            all_nodes[index]["all_labels"] = list(label)
+            # all_nodes[index]["label"] = list(label)[0]
+
+            all_nodes[index]['color']['highlight'] = {"background": "#A4A3A3", "border": "#686565"}
+
+            all_labels = list(label)
+            all_labels.sort()
+            all_nodes[index]["all_labels"] = ", ".join(all_labels)
         
 
         print(all_nodes)
+        print(max_path)
 
         final = {
             "nodes": all_nodes,
-            "edges": all_rs
+            "edges": all_rs,
+            "max-paths": max_path
         }
 
         with open("codevariant-gui-react/src/data/vis.json", "w") as outfile:
@@ -303,4 +325,4 @@ if __name__ == "__main__":
     # print(node)
     # obj.show_one_path(19)
     # obj.get_graph_json()
-    obj.gen_vis_data()
+    # obj.gen_vis_data()

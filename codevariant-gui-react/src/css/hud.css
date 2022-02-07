@@ -4,9 +4,11 @@
     position: absolute;
     right: 2vw;
     top: 2vh;
-    padding: 2vh;
+    padding: 3vh;
     border-radius: 2vh;
-    min-width: 15vw;
+    /* min-width: 15vw; */
+    max-width: 25vw;
+    /* max-height: 90vh; */
 }
 
 
@@ -15,9 +17,41 @@
     font-size: 1vw;
 }
 
+
+/* path button css */
+#label-buttons-container{
+    max-height: 40vh;
+    width: 100%;
+    overflow: scroll;
+}
+.label-button{
+    min-width: 4vw;
+    display: inline-block;
+    padding: 0px 10px;
+    border-radius: 30px;
+    text-align: center;
+    cursor: pointer;
+    margin: 6px;
+}
+.path-label-button{
+    background-color: var(--path-colour);
+    color: white;
+}
+.source-label-button{
+    background-color: var(--source-colour);
+}
+.sink-label-button{
+    background-color: var(--sink-colour);
+    color: white;
+}
+.step-label-button{
+    background-color: var(--step-colour);
+}
+
+
 /* table prop */
 #prop-table{
-    width: 100%;
+    /* width: 25vw; */
     border-collapse: collapse;
 }
 
@@ -25,6 +59,7 @@ td, th {
     border: none;
     text-align: left;
     padding: 8px;
+    word-wrap: break-word;
 }
 tr{
     background-color: #c3c3c3;
