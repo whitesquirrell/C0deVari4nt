@@ -41,8 +41,16 @@ C0deVari4nt will be available as an open-source project to facilitate additional
 
 ## Usage
 ### Run Codebase against predefined vulnerable sources and sinks
-1. Query all source functions to banned string functions based on Microsoft's Security Development Lifecycle (SDL) Banned Function Calls
+1. Query and find all source functions to banned string functions based on Microsoft's Security Development Lifecycle (SDL) Banned Function Calls
     1. Developer wants to check codebase against Microsoft's Security Development Lifecycle (SDL) Banned Function Calls
+2. Query and find all strcat functions without bound checks on the source argument
+    1. Developer wants to find all strcat function without bound check on the size of the source string
+3. Query and find all strncpy functions without bound checks on the source argument
+    1. Developer wants to find all strncpy function calls without bound check on the size of the source buffer  
+4. Query and find all cases with no bound checks on the return value of a call to snprintf
+    1. Developer wants to find all cases with no bound checks on the return value of a call to snprintf. Eg: When the operation reaches the end of the buffer and more than 1 char is discarded, the return value will be greater than the buffer size
+5. Query and find all calls to malloc, calloc or realloc without sufficient memory allocated to contain an instance of the type of the pointer
+    1. Developer wants to find all calls to malloc, calloc or realloc without sufficient memory allocated to contain an instance of the type of the pointer which may result in a buffer overflow
 
 ### Run Codebase against sources and sinks of your choice (based on the bug you want to find)
 1. Query user input source, sink and sink argument. 
