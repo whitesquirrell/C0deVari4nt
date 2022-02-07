@@ -53,6 +53,7 @@
 #prop-table{
     /* width: 25vw; */
     border-collapse: collapse;
+    width: 100%;
 }
 
 td, th {

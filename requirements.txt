@@ -4,3 +4,4 @@ Pygments==2.11.2
 py2neo
 neo4j
 selenium
+flask
