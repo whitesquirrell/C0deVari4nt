@@ -79,7 +79,7 @@ function Graph () {
                 width: 2,
                 arrows: "to",
             },
-            physics: false,
+            physics: false
         };
         var network = new Network(container, data, options);
         dispatch({type: "INIT_NETWORK", payload: network})

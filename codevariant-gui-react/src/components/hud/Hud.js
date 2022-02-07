@@ -67,11 +67,11 @@ function HUD () {
         let nodes = network.body.nodes;
         console.log(nodes)
 
-        let node_map = new Map(Object.entries(nodes))
-        Array.from(node_map.keys()).map(key => {
+        let nodesToUpdate = [];
+
+        for (const [key, val] of Object.entries(nodes)){
             if(! isNaN(key)){
                 // console.log(key, val);
-                let val = node_map.get(key)
                 
                 // console.log(val['options'])
                 let options = val['options'];
@@ -105,52 +105,11 @@ function HUD () {
                         "highlight": {"background": "#A4A3A3", "border": "#686565"}
                     }
                 }
-                // console.log(options)
-                visNodes.update(options)
+                nodesToUpdate.push(options)
             }
-        })
+        }
 
-
-        // for (const [key, val] of Object.entries(nodes)){
-        //     if(! isNaN(key)){
-        //         // console.log(key, val);
-                
-        //         // console.log(val['options'])
-        //         let options = val['options'];
-        //         let nodeLabels = val['options']['all_labels'];
-        //         nodeLabels = nodeLabels.split(", ");
-
-        //         // console.log(nodeLabels)
-        //         if (nodeLabels.includes(`${path} Source`)){
-        //             options['color'] = {
-        //                 "background": "#89ECB7", "border": "#2DC775",
-        //                 "highlight": {"background": "#A4A3A3", "border": "#686565"}
-        //             }
-        //         }
-        //         else if (nodeLabels.includes(`${path} Sink`)){
-        //             options['color'] = {
-        //                 "background": "#EC8989", "border": "#DF5959",
-        //                 "highlight": {"background": "#A4A3A3", "border": "#686565"}
-        //             }
-        //         }
-        //         else if (nodeLabels.includes(path)){
-        //             // console.log(key, val)
-        //             options['color'] = {
-        //                 "background": "#899EEC", "border": "#5875e0",
-        //                 "highlight": {"background": "#A4A3A3", "border": "#686565"}
-        //             }
-        //             // console.log("changed colour for ", key)
-        //         }
-        //         else{
-        //             options['color'] = {
-        //                 "background": "#F6EDB5", "border": "#E9D86F",
-        //                 "highlight": {"background": "#A4A3A3", "border": "#686565"}
-        //             }
-        //         }
-        //         // console.log(options)
-        //         visNodes.update(options)
-        //     }
-        // }
+        visNodes.update(nodesToUpdate)
     }
 
 
