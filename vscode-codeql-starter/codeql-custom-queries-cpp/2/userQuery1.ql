@@ -39,6 +39,6 @@ class Config extends TaintTracking::Configuration {
     }
 
 
-from Config cfg, DataFlow::PathNode source, DataFlow::PathNode sink //PathNode shows path of sources and sinks
+from Config cfg, DataFlow::PathNode source, DataFlow::PathNode sink 
 where cfg.hasFlowPath(source, sink)
 select sink, source, sink, "Taint from all source functions to BannedStringCopyFunctions"
