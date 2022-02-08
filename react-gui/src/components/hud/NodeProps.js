@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import {useSelector, useDispatch} from 'react-redux'
 import {DataSet} from "vis-data";
 
-import "../../css/hud.css"
+import "../../css/nodeprops.css"
 import data from "../../data/vis.json";
 
-function HUD () {
+function NodeProps () {
     const dispatch = useDispatch();
 
     const activeNode = useSelector((state) => {
@@ -18,10 +18,6 @@ function HUD () {
 
     const visNodes = useSelector((state) => {
         return state.visNodes
-    })
-
-    const initialNodeOptions = useSelector((state) => {
-        return state.initialNodeOptions
     })
 
 
@@ -65,7 +61,7 @@ function HUD () {
         }
 
         let nodes = network.body.nodes;
-        console.log(nodes)
+        // console.log(nodes)
 
         let nodesToUpdate = [];
 
@@ -167,4 +163,4 @@ function HUD () {
     )
 }
 
-export default HUD
+export default NodeProps

@@ -85,11 +85,6 @@ class Parse2Neo():
 
         for path_count, flow in enumerate(self.code_flows):
             node_list = self.parse_code_flow(flow)
-            # self.create_nodes(node_list, i + 1)
-            # print(i)
-            # print()
-            # print(node_list)
-            # print()
 
             prev_node_id = None
             for i, node in enumerate(node_list):
@@ -123,13 +118,6 @@ class Parse2Neo():
                     node_labels[index].add("Sink")
                     node_labels[index].add(f"Path-{path_count + 1} Sink")
 
-
-        print(len(all_nodes))
-        print(all_nodes)
-        print(all_rs)
-        print(len(all_rs))
-        print(node_labels)
-
         max_path = len(self.code_flows)
 
         for label, node in zip(node_labels, all_nodes):
@@ -159,8 +147,8 @@ class Parse2Neo():
             all_nodes[index]["all_labels"] = ", ".join(all_labels)
         
 
-        print(all_nodes)
-        print(max_path)
+        # print(all_nodes)
+        # print(max_path)
 
         final = {
             "nodes": all_nodes,

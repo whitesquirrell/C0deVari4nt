@@ -38,3 +38,7 @@ p{
     --source-colour: #89ECB7;
     --sink-colour: #EC8989;
 }
+
+.div-space{
+    height: 2vh;
+}

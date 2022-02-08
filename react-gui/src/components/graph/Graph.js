@@ -89,7 +89,7 @@ function Graph () {
         network.on("click", (prop) => {
             let ids = prop.nodes;
             let clickedNodes = nodes.get(ids)
-            console.log('clicked nodes:', clickedNodes[0]);
+            // console.log('clicked nodes:', clickedNodes[0]);
             dispatch({type: "SELECT_NODE", payload: clickedNodes[0]})
         })
     }
