@@ -22,7 +22,7 @@
 - wait a few seconds for backend to process the request
 - use right properties box to isolate paths and view node properties
 
-![Tool View](https://github.com/whitesquirrell/C0deVari4nt/blob/main/images/react-view.png) 
+![Tool View](https://github.com/whitesquirrell/C0deVari4nt/blob/kw-neoweb/images/react-view.png) 
 
 ## Description
 C0deVari4nt is a variant analysis and visualisation tool that inspects codebases for similar vulnerabilities. It leverages CodeQL, a semantic code analysis engine, to query code based on user-controlled CodeQL query templates and passes the results to Neo4j for further exploration and visualisation. This enables quick and comprehensive variant analysis based on previous vulnerability reports. The Neo4j visualisation feature provides additional insight for developers into vulnerable code paths and allows them to effectively triage potential variants.
