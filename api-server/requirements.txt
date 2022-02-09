@@ -3,3 +3,6 @@ fastapi
 starlette
 uvicorn
 python-multipart
+art==5.4
+termcolor==1.1.0
+Pygments==2.11.2
