@@ -1,7 +1,0 @@
-name: codeql/cpp-tests
-groups: [cpp, test]
-dependencies:
-  codeql/cpp-all: "*"
-  codeql/cpp-queries: "*"
-extractor: cpp
-tests: .

@@ -1,2 +1,0 @@
-lgtm,codescanning
-* Increased coverage of the Guava framework by modelling additional classes in the `com.google.common.base` package. This may result in more results for security queries on projects where the Guava framework is used. 

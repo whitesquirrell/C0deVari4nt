@@ -1,2 +1,0 @@
-codescanning
-* The 'Pointer to stack object used as return value' (cpp/return-stack-allocated-object) query has been deprecated, and any uses should be replaced with `Returning stack-allocated memory` (cpp/return-stack-allocated-memory).
