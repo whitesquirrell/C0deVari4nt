@@ -3,11 +3,18 @@ const initialState = {
     network: null,
     visNodes: null,
     initialNodeOptions: null,
-    activeNode: null
+    activeNode: null,
+    backendUrl: "http://localhost:8000",
+    visData: null
 }
 
 export default function rootReducer(state = initialState, action){
     switch (action.type){
+        case "SET_DATA":
+            return{
+                ...state,   
+                visData: action.payload
+            }
         case "INIT_NETWORK":
             return{
                 ...state,   

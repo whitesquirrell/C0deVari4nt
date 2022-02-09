@@ -3,7 +3,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import {DataSet} from "vis-data";
 
 import "../../css/nodeprops.css"
-import data from "../../data/vis.json";
+// import data from "../../data/vis.json";
 
 function NodeProps () {
     const dispatch = useDispatch();
@@ -18,6 +18,10 @@ function NodeProps () {
 
     const visNodes = useSelector((state) => {
         return state.visNodes
+    })
+
+    const visData = useSelector((state) => {
+        return state.visData
     })
 
 
@@ -50,8 +54,8 @@ function NodeProps () {
 
     const selectPath = (path) => {
         if(path == "Step"){
-            let new_nodes = new DataSet(data["nodes"])
-            let edges = new DataSet(data["edges"])
+            let new_nodes = new DataSet(visData["nodes"])
+            let edges = new DataSet(visData["edges"])
             network.setData({
                 nodes: new_nodes,
                 edges: edges
@@ -110,17 +114,19 @@ function NodeProps () {
 
 
     const generatePathsButtons = () => {
-        let maxPaths = data["max-paths"]
+        if(visData){
+            let maxPaths = visData["max-paths"]
 
-        let pathButtons = []
-        for(let i = 1; i <= maxPaths; i ++){
-            pathButtons.push(<div className='label-button path-label-button'
-                onClick={() => {selectPath(`Path-${i}`)}}
-            >
-                <p className=''>{`Path-${i}`}</p>
-            </div>)
+            let pathButtons = []
+            for(let i = 1; i <= maxPaths; i ++){
+                pathButtons.push(<div className='label-button path-label-button'
+                    onClick={() => {selectPath(`Path-${i}`)}}
+                >
+                    <p className=''>{`Path-${i}`}</p>
+                </div>)
+            }
+            return pathButtons
         }
-        return pathButtons
     }
 
     const generateLabelButtons = () => {

@@ -2,3 +2,4 @@ pydantic
 fastapi
 starlette
 uvicorn
+python-multipart
