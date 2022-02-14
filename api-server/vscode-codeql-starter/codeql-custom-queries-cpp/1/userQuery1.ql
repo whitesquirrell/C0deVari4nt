@@ -12,7 +12,7 @@ class Config extends TaintTracking::Configuration {
     Config() { this = "RecvUserInputToSink" }
 
     override predicate isSource(DataFlow::Node source) {
-        source.asExpr().(FunctionCall).getTarget().hasGlobalName("recvfrom")
+        source.asExpr().(FunctionCall).getTarget().hasGlobalName("mempool_alloc")
     }
 
     override predicate isSink(DataFlow::Node sink) {
@@ -22,4 +22,4 @@ class Config extends TaintTracking::Configuration {
 
 from Config cfg, DataFlow::PathNode source, DataFlow::PathNode sink 
 where cfg.hasFlowPath(source, sink)
-select sink, source, sink, "Taint from recvfrom to memcpy " + source
+select sink, source, sink, "Taint from mempool_alloc to memcpy " + source
