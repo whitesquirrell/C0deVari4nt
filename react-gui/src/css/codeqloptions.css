@@ -1,0 +1,94 @@
+#options-container{
+    position: absolute;
+    bottom: 2vh;
+    left: 2vw;
+    max-width: 25vw;
+    background-color: white;
+}
+
+#ql-options{
+    width: 25vw;
+    min-height: 10vh;
+    /* max-height: 25vw; */
+    background-color: white;
+    padding: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#ql-options select{
+    background-color: #F1F1F1;
+    border: 0;
+    padding: 10px;
+}
+#ql-options input[type="text"]{
+    border: 0px;
+    background-color: #F1F1F1;
+    padding: 10px;
+}
+
+.hamburger-lines {
+    display: block;
+    height: 2vh;
+    padding: 20px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    background-color: white;
+}
+.hamburger-lines .line{
+    display: block;
+    height: 4px;
+    width: 2vw;
+    border-radius: 10px;
+    background: #0e2431;
+}
+
+
+.options-field-container{
+    display: flex;
+    justify-content: space-between;
+    margin: 1vh 0;
+}
+/* options container  */
+.options-field-container .section-label{
+    font-size: 1vw;
+    /* float: left; */
+}
+
+#ql-options input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    /* padding: 6px 12px; */
+    cursor: pointer;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+select{
+    width: 50%;
+}
+
+.options-btn{
+    background-color: grey;
+    padding: 10px;
+    color: white;
+    font-size: 0.8vw;
+    cursor: pointer;
+    min-width: 4vw;
+    text-align: center;
+}
+
+.div-line{
+    border: 1px solid lightgray;
+    width: 100%;
+    margin: 2vh 0;
+}

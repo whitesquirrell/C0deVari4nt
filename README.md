@@ -1,6 +1,29 @@
 # C0deVari4nt 
 ![C0deVari4nt](https://github.com/whitesquirrell/C0deVari4nt/blob/main/images/icon.png) 
 
+
+# v1 Usage
+## Setting up Database Folder
+- cd into api-server directory and run `dbextractor.py <codeql db zip file>` to unzip the codeql database contents
+
+## Running Backend Server
+- cd into api-server
+- download dependencies `pip install -r requirements.txt`
+- run `uvicorn main:app --reload` to start local developmental server on port 8000
+
+## Run React Interface
+- cd into react-gui
+- download dependencies `npm i`
+- run `npm  start` to start local developmental server
+
+
+## Using the Tool
+- input your query options into the options box and click apply
+- wait a few seconds for backend to process the request
+- use right properties box to isolate paths and view node properties
+
+![Tool View](https://github.com/whitesquirrell/C0deVari4nt/blob/kw-neoweb/images/react-view.png) 
+
 ## Description
 C0deVari4nt is a variant analysis and visualisation tool that inspects codebases for similar vulnerabilities. It leverages CodeQL, a semantic code analysis engine, to query code based on user-controlled CodeQL query templates and passes the results to Neo4j for further exploration and visualisation. This enables quick and comprehensive variant analysis based on previous vulnerability reports. The Neo4j visualisation feature provides additional insight for developers into vulnerable code paths and allows them to effectively triage potential variants.
 
