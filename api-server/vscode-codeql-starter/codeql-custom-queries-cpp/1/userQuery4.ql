@@ -1,5 +1,7 @@
 /**
+ * @name User-controlled source to dangerous sink
  * @kind path-problem
+ * @id template-4
  */
 
 import semmle.code.cpp.dataflow.TaintTracking
@@ -11,7 +13,7 @@ class Conf extends TaintTracking::Configuration {
 
   override predicate isSource(DataFlow::Node source) {
     source.asDefiningArgument() =
-      any(Call call | call.getTarget().hasName("recvfrom")).getArgument(1)
+      any(Call call | call.getTarget().hasName("read")).getArgument(1)
   }
 
   override predicate isSink(DataFlow::Node sink) {
@@ -25,4 +27,4 @@ class Conf extends TaintTracking::Configuration {
 
 from Conf conf, DataFlow::PathNode source, DataFlow::PathNode sink
 where conf.hasFlowPath(source, sink)
-select sink.getNode(), source, sink, "Taint from recvfrom to memcpy with additional taint step to transfer taint between pointers"
+select sink.getNode(), source, sink, "Taint from read to memcpy with additional taint step to transfer taint between pointers"
