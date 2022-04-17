@@ -227,9 +227,9 @@ function CodeQLOptions(){
                         onChange={(e) => {setSelectedCategory(e.target.value)}}
                         value={selectedCategory}
                     >
-                        <option value='1' >Find all source functions to banned string copy functions</option>
-                        <option value='2'>Find all calls to strcat without checking the size of the source string</option>
-                        <option value='3'>Find all calls to strncat with the size of the source buffer as third argument</option>
+                        <option value='1'>Find all source functions to banned string copy functions</option>
+                        <option value='2'>Find all calls to strcat functions without bound checks on the source argument</option>
+                        <option value='3'>Find all calls to strncpy functions without bound checks on the source argument</option>
                         <option value='4'>Find all cases with no bound checks on the return value of a call to snprintf</option>
                         <option value='5'>Find all calls to malloc, calloc or realloc without sufficient memory allocated to contain an instance of the type of the pointer</option>
                     </select>
@@ -243,10 +243,10 @@ function CodeQLOptions(){
                         onChange={(e) => {setCustomQueryFields(e.target.value)}}
                         value={customQueryFields}
                     >
-                        <option value='1' selected={customQueryFields=="1"}>Query all sources to a dangerous sink</option>
-                        <option value='2' selected={customQueryFields=="2"}>Query a specific source to a dangerous sink</option>
-                        <option value='3' selected={customQueryFields=="3"}>Query a specific source to a dangerous sink (Tainted function)</option>
-                        <option value='4' selected={customQueryFields=="4"}>Query a specific source to a dangerous sink (Tainted expression)</option>
+                        <option value='1' selected={customQueryFields=="1"}>Find all source expressions to a dangerous sink</option>
+                        <option value='2' selected={customQueryFields=="2"}>Find a specific source to a dangerous sink</option>
+                        <option value='3' selected={customQueryFields=="3"}>Find a specific source to a dangerous sink (Tainted function)</option>
+                        <option value='4' selected={customQueryFields=="4"}>Find a specific source to a dangerous sink (Tainted expression)</option>
                     </select>
                 </div>
                 {showCustomQueryFields()}
