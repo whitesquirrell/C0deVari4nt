@@ -59,11 +59,11 @@ More details of the client interface can be seen below:
 5. Find all calls to `malloc`, `calloc` or `realloc` without sufficient memory allocated to contain an instance of the type of the pointer
 
 ### Run Codebase against sources and sinks of your choice (Option 2)
-1. Find all source expressions to a dangerous sink
-2. Find a specific source to a dangerous sink
-3. Find a specific source to a dangerous sink (Tainted function)
+1. Find all source expressions to a dangerous sink function
+2. Find a specific source function to a dangerous sink function
+3. Find a specific source function to a dangerous sink function (Tainted function)
     1. Use the `isAdditionalTaintStep` method to transfer taints between 2 disconnected functions
-4. Find a specific source to a dangerous sink (Tainted expression)
+4. Find a specific source function to a dangerous sink function (Tainted expression)
     1. Use the `isAdditionalTaintStep` method to transfer taints between pointers which have the same values at runtime
 
 ## Simplifying CodeQL Results and Relationships between Nodes
