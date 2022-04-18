@@ -9,24 +9,32 @@ With C0deVari4nt, users will be able to:
 - Flag, filter and extract out potential variants of vulnerabilities found into a visualisation tool
 
 ## Tool Description
-C0deVari4nt is a variant analysis and visualisation tool that inspects codebases for similar vulnerabilities. It leverages CodeQL, a semantic code analysis engine, to query code based on user-controlled CodeQL query templates and passes the results to Neo4j for further exploration and visualisation. This enables quick and comprehensive variant analysis based on previous vulnerability reports. The Neo4j visualisation feature provides additional insight for developers into vulnerable code paths and allows them to effectively triage potential variants. 
+C0deVari4nt is a variant analysis and visualisation tool that inspects codebases for similar vulnerabilities. It leverages CodeQL, a semantic code analysis engine, to query code based on user-controlled CodeQL query templates and passes the results to a graph database view powered by vis.js for further exploration and visualisation. This enables quick and comprehensive variant analysis based on previous vulnerability reports. The visualisation feature provides additional insight for developers into vulnerable code paths and allows them to effectively triage potential variants. 
 
 The Log4Shell incident in December 2021 highlighted the difficulties open-source developers face in responding to vulnerability reports. After the initial patch for CVE-2021-44228, which allowed unauthenticated remote attackers to take control of devices running vulnerable versions of Log4j 2, Apache released 3 additional patches to address related vulnerabilities and unmitigated edge cases.
 
 Open-source developers often lack training in comprehensive code review and face problems in identifying variants of a vulnerability, leading to incomplete patches. Although CodeQL query suites exist to facilitate quick analysis of the codebase, the results returned from these suites may result in significant false positive rates. Furthermore, these suites rely on predefined queries which do not support variant analysis and are not customised for individual codebases. As such, open-source projects often respond to vulnerability reports in a piecemeal manner that misses potential variants.
 
-C0deVari4nt provides a platform for developers to easily conduct variant analysis without the significant overhead of writing their own CodeQL queries. This gives developers the flexibility to customise CodeQL templates by providing codebase-specific information such as a particular source and sink of a vulnerability. The results will be visualised in a simplified Neo4j graph for developers to quickly identify potential variants. As such, developers will be able to effectively address entire classes of bugs from a single vulnerability report.
+C0deVari4nt provides a platform for developers to easily conduct variant analysis without the significant overhead of writing their own CodeQL queries. This gives developers the flexibility to customise CodeQL templates by providing codebase-specific information such as a particular source and sink of a vulnerability. The results will be visualised in a simplified vis.js graph for developers to quickly identify potential variants. As such, developers will be able to effectively address entire classes of bugs from a single vulnerability report.
 
 ## Tool Details
-C0deVari4nt is built using Python, CodeQL, and Neo4j to create an interactive GUI application that takes user input and showcases relationships between different vulnerable code paths.
+C0deVari4nt is built using python, CodeQL, vis.js and React to create an interactive GUI application to take user input and showcase relationships between different vulnerable code paths.
 
 C0deVari4nt consists of the following 3 main components:
 
 - Variant-Inputs: This module takes in a target CodeQL database zip file and user inputs of known source and sink functions to generate CodeQL queries to find bug variants. Alternatively, the module can generate a query from all source functions to  Microsoft’s Security Development Lifecycle’s Banned String Copy functions.
 - Variant-Query: This module forms CodeQL query files from a set of predefined query templates using the inputted sources and sinks. The query files are then run on the provided target database to generate a sarif file object of potentially vulnerable code paths.
-- Parse2Neo: This module parses the extracted code paths to create nodes and relationships within the Neo4j interactive graph database. Nodes are categorised into their respective paths, sources, and sinks through labels. The module can discern recurring steps between multiple code pathways and link them together to display any overlapping of steps. 
+- Parse2Vis: This module parses the extracted code paths to create nodes and relationships within the vis.js interactive graph database. Nodes are categorised into their respective paths, sources, and sinks through labels. The module can discern recurring steps between multiple code pathways and link them together to display any overlapping of steps. 
 
-Currently, our tool uses a CLI interface built with Python to take user input. Since Neo4j supports integration with UI interfaces, we are looking to migrate the project to a desktop GUI application that will adopt Neo4j’s graph database view and also be able to query custom path perspectives relevant to CodeQL. In a way, our tool will work similarly to Bloodhound, an Active Directory path management solution also built upon Neo4j.
+Currently, our tool has been migrated to a GUI interface making it easier for developers to use. Instead of relying on Neo4j for visualisation (previous C0deVari4nt version), we are now using a graph database view powered by vis.js. This gives us additional flexibility to customise our nodes and highlight each path for easier visualisation.
+
+C0deVari4nt consists of the following 2 main components:  
+- **Client Interface**: This component is built with React and the vis.js browser-based visualisation library. Users interact with this component to customise the CodeQL query and analyse CodeQL results through a graph visualisation view.
+- **API Server**: This component is built upon the Python FastAPI web framework to receive requests from the client interface and run CodeQL commands against a list of CodeQL-ready database files. The server then returns the parsed data results back to the client interface.
+
+
+More details of the client interface can be seen below:
+![Tool Architecture](https://github.com/whitesquirrell/C0deVari4nt/blob/main/images/interface.png) 
 
 C0deVari4nt will be available as an open-source project to facilitate additional plugins and contributions in the form of query variant templates by the community to bring the tool to greater heights.
 
@@ -37,32 +45,48 @@ C0deVari4nt will be available as an open-source project to facilitate additional
 ### Generating CodeQL Queries 
 - Predefined CodeQL query templates will be used to query the codebase based on the user inputs.
 
-### CodeQL results passed to Neo4j
+### CodeQL results passed to Vis.js
 - Our tool will be able to identify duplicate occurrences of each node, source and sink and merge the relationships of the nodes. This results in a much cleaner graph and allows developers to quickly identify potential variants.
 
+# v1 Usage
+## Setting up Database Folder
+- cd into api-server directory and run `dbextractor.py <codeql db zip file>` to unzip the codeql database contents
 
-## User Flow
-1. Run the tool with the database zip file as an argument
-2. User is prompted on whether they want to query predefined sources and sinks or input their own sources and sinks
+## Running Backend Server
+- cd into api-server
+- Download dependencies `pip install -r requirements.txt`
+- Run `uvicorn main:app --reload` to start local developmental server on port 8000
 
-	![](https://i.imgur.com/G9D3BhQ.png)
-	- If the user chooses option 1, our tool will run a query to find all source expressions to the following Microsoft Security Development Lifecycle of Banned string copy functions (More templates to be implemented) 
+## Run React Interface
+- cd into react-gui
+- Download dependencies `npm i`
+- Run `npm  start` to start local developmental server
 
-	- If the user chooses option 2, the user will be prompted to choose one of the 3 options based on the following:
-		- Query user input source, sink and sink argument.
-			- Developer knows the source and sink information
-		- Query all source expressions to user input sink and argument.
-			- Developer only knows the sink function and argument.
-		- Query user input vulnerable source and sink information whereby the source is tainted.
-			- Developer is trying to find a bug whereby the user input variable is tainted. For instance, the developer is trying to find paths whereby the `recvfrom` function value is used in `memcpy` sizeof Argument. However, these 2 nodes are not connected as the variable holding the `recvfrom` value is dereferenced and stored in another variable before the memcpy function. If we were to use the first query, no results will be returned. Instead, we can force the 2 nodes to connect by using `isAdditionalTaintStep` in this query template to catch the tainted source.
 
-3. After the user has chosen their options, our tool will edit the CodeQL predefined templates accordingly and run them.
+## Using the Tool
+![User Process](https://github.com/whitesquirrell/C0deVari4nt/blob/main/images/user-process.png) 
 
-4. Once CodeQL has successfully analysed the codebase, the data will be stored in a JSON file in SARIF format. Further filtering of the JSON file will be done and duplicated nodes and paths will be removed and displayed in Neo4j. 
-	![](https://i.imgur.com/wtlGhWU.png)
+- Input your query options into the options box and click apply
+- Wait a few seconds for backend to process the request
+- Use right properties box to isolate paths and view node properties
 
-## Command-line interface:
-![](https://i.imgur.com/aZpHuXW.png)
+## Query options
+### Run Codebase against predefined vulnerable sources and sinks (Option 1) 
+1. Find all source functions to banned string functions (based on Microsoft's Security Development Lifecycle (SDL) Banned Function Calls)
+2. Find all calls to `strcat` functions without bound checks on the source argument
+3. Find all calls to `strncpy` functions without bound checks on the source argument
+4. Find all cases with no bound checks on the return value of a call to `snprintf`
+    1. Eg: When the operation reaches the end of the buffer and more than 1 char is discarded, the return value will be greater than the buffer size
+5. Find all calls to `malloc`, `calloc` or `realloc` without sufficient memory allocated to contain an instance of the type of the pointer
+
+### Run Codebase against sources and sinks of your choice (Option 2)
+1. Find all source expressions to a dangerous sink
+2. Find a specific source to a dangerous sink
+3. Find a specific source to a dangerous sink (Tainted function)
+    1. Use the `isAdditionalTaintStep` method to transfer taints between 2 disconnected functions
+4. Find a specific source to a dangerous sink (Tainted expression)
+    1. Use the `isAdditionalTaintStep` method to transfer taints between pointers which have the same values at runtime
+
 
 ## Case Study
 We tested our tool on Accel-PPP codebase and managed to obtain 3 CVEs from it. Via manual code review we realised that there is a memory corruption vulnerability from `mempool_alloc` to `recvfrom` and to `memcpy` whereby user input `len` is copied into a fixed buffer `&attr->val.integer` without any bound checks. Using this information, we used the first query to input the source as `mempool_alloc` and sink as `memcpy`. From the simplified results returned by the graph, we were able to find another vulnerability in the same file. This time, user input `len` is copied into another fixed sized buffer `&attr->val.ipv6prefix.prefix`
@@ -81,6 +105,18 @@ By putting this query through our tool, we were able to identify duplicate occur
 
 The tool can further categorise each node into their different paths using Neo4j's built-in node labels:
 ![](https://i.imgur.com/q3Jzro5.png)
+
+### Updated version with vis.js
+By putting this query through our tool, we were able to identify duplicate occurrences of each node, source and sink and merge the relationships of the nodes.  
+This resulted in a significantly cleaner graph with a total of **11 unique nodes** while still retaining all 27 unique code paths:
+
+![neo-3](https://github.com/whitesquirrell/C0deVari4nt/blob/main/images/codevariant-3.png)  
+
+The results can be further categorised into their respective paths through our path labelling feature:
+
+![neo-4](https://github.com/whitesquirrell/C0deVari4nt/blob/main/images/codevariant-4.png)
+
+![codevariant](https://github.com/whitesquirrell/C0deVari4nt/blob/main/images/codevariant.gif)
 
 
 ## Limitations
