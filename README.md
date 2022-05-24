@@ -1,4 +1,5 @@
 # C0deVari4nt 
+![Black Hat Arsenal](https://github.com/whitesquirrell/C0deVari4nt/blob/main/images/bha2022.svg)\
 ![C0deVari4nt](https://github.com/whitesquirrell/C0deVari4nt/blob/main/images/icon.png) 
 
 ## Description
